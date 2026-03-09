@@ -17,4 +17,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GainBase.DataModels\GainBase.Data.Models.csproj" />
+    <ProjectReference Include="..\GainBase.GCommon\GainBase.GCommon.csproj" />
+    <ProjectReference Include="..\GainBase.Services.Core\GainBase.Services.Core.csproj" />
+    <ProjectReference Include="..\GainBase.ViewModels\GainBase.Web.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

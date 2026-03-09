@@ -1,4 +1,4 @@
-namespace GainBase.Web.Models
+namespace GainBase.Web.ViewModels
 {
     public class ErrorViewModel
     {

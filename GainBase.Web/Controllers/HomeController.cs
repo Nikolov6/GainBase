@@ -1,4 +1,4 @@
-using GainBase.Web.Models;
+using GainBase.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace GainBase.Web.Data.Migrations
+namespace GainBase.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
