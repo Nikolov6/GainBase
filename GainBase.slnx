@@ -1,13 +1,13 @@
 <Solution>
   <Folder Name="/Data/">
+    <Project Path="GainBase.Data.Models/GainBase.Data.Models.csproj" />
     <Project Path="GainBase.Data/GainBase.Data.csproj" Id="f2f3bcda-9325-4792-94fb-406e18e04856" />
-    <Project Path="GainBase.DataModels/GainBase.Data.Models.csproj" Id="1fbef3e3-d5f5-4a89-ab47-8f45eabd6ea8" />
   </Folder>
   <Folder Name="/Services/">
     <Project Path="GainBase.Services.Core/GainBase.Services.Core.csproj" Id="f98d8641-97d0-4c2b-a96f-fdcc0fd58583" />
   </Folder>
   <Folder Name="/Web/">
-    <Project Path="GainBase.ViewModels/GainBase.Web.ViewModels.csproj" Id="b8b1d999-114f-42fa-8695-76f93a4e8eca" />
+    <Project Path="GainBase.Web.ViewModels/GainBase.Web.ViewModels.csproj" />
     <Project Path="GainBase.Web/GainBase.Web.csproj" />
   </Folder>
   <Project Path="GainBase.GCommon/GainBase.GCommon.csproj" Id="53fa63ed-99f9-46df-826f-1a80e0689e96" />

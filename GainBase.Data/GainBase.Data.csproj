@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GainBase.DataModels\GainBase.Data.Models.csproj" />
+    <ProjectReference Include="..\GainBase.Data.Models\GainBase.Data.Models.csproj" />
     <ProjectReference Include="..\GainBase.GCommon\GainBase.GCommon.csproj" />
   </ItemGroup>
 
