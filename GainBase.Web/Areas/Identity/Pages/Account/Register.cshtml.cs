@@ -37,6 +37,12 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at most {1} characters long.", MinimumLength = 3)]
+            [RegularExpression(@"^[a-zA-Z0-9_\-\.]+$", ErrorMessage = "Username can only contain letters, numbers, underscores, hyphens and dots.")]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -52,7 +58,6 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -62,14 +67,14 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            
+
             PasswordRequiredLength = userManager.Options.Password.RequiredLength;
 
             if (ModelState.IsValid)
             {
                 IdentityUser user = CreateUser();
 
-                await userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 IdentityResult result = await userManager.CreateAsync(user, Input.Password);
 
