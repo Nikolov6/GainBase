@@ -1,4 +1,4 @@
-using GainBase.Web.Data;
+using GainBase.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
