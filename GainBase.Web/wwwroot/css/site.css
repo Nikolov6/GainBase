@@ -18,5 +18,101 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 0 !important;
+}
+
+/* Vibrant Gym Theme Styles */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.text-accent { color: #e94560; }
+
+.btn-accent {
+    background-color: #e94560;
+    color: #fff;
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-accent:hover {
+    background-color: #d83a54;
+    color: #fff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(233, 69, 96, 0.5);
+}
+
+.btn-outline-light { transition: transform 0.3s ease; }
+.btn-outline-light:hover { transform: translateY(-4px); }
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f1f1f1;
+    border-radius: 1rem;
+    background: #fff;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.icon-container {
+    width: 80px;
+    height: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    margin-bottom: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .icon-container { transform: scale(1.1) rotate(5deg); }
+
+.bg-icon-1 { background: #ffe1e6; color: #e94560; }
+.bg-icon-2 { background: #e1f5fe; color: #03a9f4; }
+.bg-icon-3 { background: #fff3e0; color: #ff9800; }
+
+/* Navigation & Footer Accent Styles */
+.custom-navbar {
+    background: #1a1a2e !important;
+    border-bottom: 3px solid #e94560;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.custom-navbar .navbar-brand {
+    color: #e94560 !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.custom-navbar .nav-link {
+    color: #e2e8f0 !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #e94560 !important;
+}
+
+.custom-navbar .navbar-toggler {
+    border-color: rgba(233, 69, 96, 0.5);
+}
+
+.custom-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28233, 69, 96, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.custom-footer {
+    background: #1a1a2e;
+    color: #a0aec0;
+    border-top: 3px solid #e94560;
 }

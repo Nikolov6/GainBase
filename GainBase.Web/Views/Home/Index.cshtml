@@ -1,8 +1,71 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    bool isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section -->
+<div class="px-4 py-5 mb-5 text-center hero-section">
+    <h1 class="display-4 fw-bold mb-3">Welcome to <span class="text-accent">GainBase</span></h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4 fw-light">
+            Your community-driven fitness hub. Discover step-by-step exercise instructions, share your workout ideas with athletes worldwide, and build your perfect routine by saving your favorites.
+        </p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            
+            <a asp-controller="Exercises" asp-action="Index" class="btn btn-outline-light btn-lg px-4 fw-bold text-uppercase">
+                Explore Exercises
+            </a>
+            
+            @if (!isAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-accent btn-lg px-4 fw-bold text-uppercase">
+                    Start Sharing Exercises
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Exercises" asp-action="Create" class="btn btn-accent btn-lg px-4 fw-bold text-uppercase">
+                    Share an Exercise
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container px-4 py-5" id="features">
+    <h2 class="pb-2 border-bottom text-center mb-5 fw-bold">How It Works</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        
+        <div class="col">
+            <div class="feature-card h-100 p-4 text-center shadow-sm">
+                <div class="icon-container bg-icon-1">
+                    🏋️‍♂️
+                </div>
+                <h3 class="fs-4 fw-bold">Learn & Discover</h3>
+                <p class="text-muted">Browse through an ever-growing library of community-shared exercises. Get detailed instructions to ensure proper form and maximize your gains safely.</p>
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="feature-card h-100 p-4 text-center shadow-sm">
+                <div class="icon-container bg-icon-2">
+                    💡
+                </div>
+                <h3 class="fs-4 fw-bold">Share Knowledge</h3>
+                <p class="text-muted">Mastered a unique movement? Share your personal tips, variations, and step-by-step instructions to help fellow gym-goers crush their goals.</p>
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="feature-card h-100 p-4 text-center shadow-sm">
+                <div class="icon-container bg-icon-3">
+                    ⭐
+                </div>
+                <h3 class="fs-4 fw-bold">Favorite Routines</h3>
+                <p class="text-muted">Found an exercise that hits just right? Favorite it to quickly build up a personalized library and easily recall your best movements on your next gym session.</p>
+            </div>
+        </div>
+
+    </div>
 </div>

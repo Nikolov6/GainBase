@@ -81,7 +81,8 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/");
+            // Default landing after login — send users to the exercises listing when no return URL provided
+            returnUrl ??= Url.Content("~/Exercises");
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -91,7 +92,8 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            // Default landing after successful login
+            returnUrl ??= Url.Content("~/Exercises");
 
             if (ModelState.IsValid)
             {
