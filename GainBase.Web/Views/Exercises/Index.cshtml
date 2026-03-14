@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ExerciseIndexViewModel>
+
+@{
+    ViewData["Title"] = "Exercises";
+}
+
+<div class="container mt-4">
+    <h1>Exercises</h1>
+    
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a asp-action="Create" asp-controller="Exercise" class="btn btn-primary mb-3">Create New Exercise</a>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No exercises found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Muscle Group</th>
+                    <th>Equipment</th>
+                    <th>Favorites</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exercise in Model)
+                {
+                    <tr>
+                        <td>@exercise.Name</td>
+                        <td>@exercise.MuscleGroupName</td>
+                        <td>@exercise.EquipmentName</td>
+                        <td><span class="badge bg-info">@exercise.FavoritesCount</span></td>
+                        <td>
+                            <a asp-action="Details" asp-controller="Exercise" asp-route-id="@exercise.Id" class="btn btn-sm btn-info">Details</a>
+                            
+                            @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
+                            {
+                                <form asp-action="AddToMyFavorites" asp-controller="Exercises" method="post" style="display:inline;">
+                                    <input type="hidden" name="exerciseId" value="@exercise.Id" />
+                                    <button type="submit" class="btn btn-sm btn-warning">Add to Favorites</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

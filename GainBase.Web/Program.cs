@@ -1,4 +1,6 @@
 using GainBase.Data;
+using GainBase.Services.Core;
+using GainBase.Services.Core.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +25,8 @@ namespace GainBase.Web
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IExerciseService, ExerciseService>();
 
             WebApplication app = builder.Build();
 

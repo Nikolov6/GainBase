@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GainBase.Data.Models\GainBase.Data.Models.csproj" />
     <ProjectReference Include="..\GainBase.Data\GainBase.Data.csproj" />
     <ProjectReference Include="..\GainBase.GCommon\GainBase.GCommon.csproj" />
