@@ -1,55 +1,77 @@
 ﻿@model IEnumerable<ExerciseIndexViewModel>
 
 @{
-    ViewData["Title"] = "Exercises";
+    ViewData["Title"] = "Discover Exercises";
 }
 
 <div class="container mt-4">
-    <h1>Exercises</h1>
-    
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a asp-action="Create" asp-controller="Exercise" class="btn btn-primary mb-3">Create New Exercise</a>
-    }
+    <div class="hero-section d-flex justify-content-between align-items-center flex-wrap gap-4">
+        <div>
+            <h1 class="display-5 fw-bold mb-2">Exercise Library</h1>
+            <p class="lead mb-0 text-white-50">Discover new routines and track your favorite movements.</p>
+        </div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-action="Create" asp-controller="Exercise" class="btn btn-light btn-lg shadow-sm text-primary fw-bold px-4 btn-rounded">
+                ➕ Create Exercise
+            </a>
+        }
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">No exercises found.</div>
+        <div class="text-center py-5">
+            <div class="display-1 text-muted opacity-25 mb-3">🏋️‍♂️</div>
+            <h3 class="text-muted fw-bold">No exercises found</h3>
+            <p class="text-secondary">Be the first to add an exercise to the library!</p>
+        </div>
     }
     else
     {
-        <table class="table table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Muscle Group</th>
-                    <th>Equipment</th>
-                    <th>Favorites</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var exercise in Model)
-                {
-                    <tr>
-                        <td>@exercise.Name</td>
-                        <td>@exercise.MuscleGroupName</td>
-                        <td>@exercise.EquipmentName</td>
-                        <td><span class="badge bg-info">@exercise.FavoritesCount</span></td>
-                        <td>
-                            <a asp-action="Details" asp-controller="Exercise" asp-route-id="@exercise.Id" class="btn btn-sm btn-info">Details</a>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-5">
+            @foreach (var exercise in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 exercise-card shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column">
                             
-                            @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
-                            {
-                                <form asp-action="AddToMyFavorites" asp-controller="Exercises" method="post" style="display:inline;">
-                                    <input type="hidden" name="exerciseId" value="@exercise.Id" />
-                                    <button type="submit" class="btn btn-sm btn-warning">Add to Favorites</button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4 class="fw-bold text-dark mb-0">@exercise.Name</h4>
+                                <span class="badge bg-dark rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-1" title="Favorited by @exercise.FavoritesCount users">
+                                    ⭐ @exercise.FavoritesCount
+                                </span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <span class="badge badge-soft-primary px-3 py-2 rounded-pill me-2 mb-2">
+                                    @exercise.MuscleGroupName
+                                </span>
+                                <span class="badge badge-soft-success px-3 py-2 rounded-pill mb-2">
+                                    @exercise.EquipmentName
+                                </span>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-auto pt-3 border-top border-light">
+                                <a asp-action="Details" asp-controller="Exercise" asp-route-id="@exercise.Id" 
+                                   class="btn btn-outline-dark flex-grow-1 btn-rounded fw-medium">
+                                    View Details
+                                </a>
+                                
+                                @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
+                                {
+                                    <form asp-action="AddToMyFavorites" asp-controller="Exercises" method="post" m-0>
+                                        <input type="hidden" name="exerciseId" value="@exercise.Id" />
+                                        <button type="submit" class="btn btn-warning btn-rounded px-3 shadow-sm text-dark h-100" title="Add to Favorites">
+                                            ⭐
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
 </div>
