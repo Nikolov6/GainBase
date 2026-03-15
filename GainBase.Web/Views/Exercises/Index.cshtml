@@ -6,6 +6,14 @@
 }
 
 <div class="container mt-4">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="hero-section d-flex justify-content-between align-items-center flex-wrap gap-4">
         <div>
             <h1 class="display-5 fw-bold mb-2">Exercise Library</h1>
@@ -60,7 +68,7 @@
                                 
                                 @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
                                 {
-                                    <form asp-action="AddToFavorites" asp-controller="Exercises" method="post" m-0>
+                                    <form asp-action="AddToFavorites" asp-controller="Exercises" method="post" class="m-0">
                                         <input type="hidden" name="exerciseId" value="@exercise.Id" />
                                         <button type="submit" class="btn btn-warning btn-rounded px-3 shadow-sm text-dark h-100" title="Add to Favorites">
                                             ⭐

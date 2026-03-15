@@ -102,11 +102,6 @@ namespace GainBase.Services.Core
             }
         }
 
-        public Task RemoveFromUserFavoritesAsync(int exerciseId, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> IsExerciseInUserFavoritesAsync(Guid exerciseId, string userId)
         {
             bool isInFavorites = await dbContext.UsersExercises
@@ -121,6 +116,11 @@ namespace GainBase.Services.Core
                 .AnyAsync(e => e.Id == exerciseId && e.CreatorId == userId);
 
             return isCreator;
+        }
+
+        public Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -28,10 +28,10 @@
                             </div>
                             
                             <div class="mb-4">
-                                <span class="badge badge-soft-primary px-3 py-2 rounded-pill me-2 mb-2">
+                                <span class="badge bg-primary text-white px-3 py-2 rounded-pill me-2 mb-2 shadow-sm">
                                     @exercise.MuscleGroupName
                                 </span>
-                                <span class="badge badge-soft-success px-3 py-2 rounded-pill mb-2">
+                                <span class="badge bg-success text-white px-3 py-2 rounded-pill mb-2 shadow-sm">
                                     @exercise.EquipmentName
                                 </span>
                                 <div class="text-muted small mt-2">
@@ -45,7 +45,7 @@
                                     View Details
                                 </a>
                                 
-                                <form asp-action="RemoveFromMyFavorites" asp-controller="Exercises" method="post" class="m-0">
+                                <form asp-action="RemoveFromFavorites" asp-controller="Exercises" method="post" class="m-0">
                                     <input type="hidden" name="exerciseId" value="@exercise.Id" />
                                     <button type="submit" class="btn btn-danger btn-rounded px-3 shadow-sm h-100" title="Remove from Favorites">
                                         🗑️

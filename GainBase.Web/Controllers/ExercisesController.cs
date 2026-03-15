@@ -106,11 +106,34 @@ namespace GainBase.Web.Controllers
             return View(favoriteExercises);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddToFavorites()
+        public async Task<IActionResult> AddToFavorites(Guid exerciseId)
         {
+            string userId = GetCurrentUserId()!;
 
+            bool isUserCreator = await exerciseService.IsExerciseCreatorAsync(exerciseId, userId);
+            if (isUserCreator)
+            {
+                TempData["ErrorMessage"] = "You cannot add your own exercise to favorites.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool isAlreadyInFavorites = await exerciseService.IsExerciseInUserFavoritesAsync(exerciseId, userId);
+            if (!isAlreadyInFavorites)
+            {
+                try
+                {
+                    await exerciseService.AddToUserFavoritesAsync(exerciseId, userId);
+                }
+                catch (Exception e)
+                {
+                    this.logger.LogError(e, "An error occurred while adding the exercise to favorites. Please try again later.");
+                    TempData["ErrorMessage"] = "An error occurred while adding the exercise to favorites. Please try again later.";
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
