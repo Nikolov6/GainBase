@@ -1,4 +1,5 @@
 ﻿using GainBase.Data;
+using GainBase.Data.Models;
 using GainBase.Services.Core.Contracts;
 using GainBase.Web.ViewModels.Exercise;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,21 @@ namespace GainBase.Services.Core
             return allExercises;
         }
 
-       
+        public async Task CreateExerciseAsync(ExerciseFormModel model, string userId)
+        {
+            Exercise newExercise = new Exercise
+            {
+                Name = model.Name,
+                Description = model.Description,
+                MuscleGroupId = model.MuscleGroupId,
+                EquipmentId = model.EquipmentId,
+                Instructions = model.Instructions,
+                CreatorId = userId,
+            };
+
+            await dbContext.Exercises.AddAsync(newExercise);
+            await dbContext.SaveChangesAsync();
+        }
+        
     }
 }

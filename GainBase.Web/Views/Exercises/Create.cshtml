@@ -1,0 +1,77 @@
+@using GainBase.Web.ViewModels.Exercise
+@model ExerciseFormModel
+
+@{
+    ViewData["Title"] = "Create Exercise";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-primary text-white py-3 rounded-top-4">
+                    <h2 class="mb-0 fw-bold fs-4 text-center">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <p class="text-muted text-center mb-4">Add a new exercise to our library by filling out the details below.</p>
+                    
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Name" class="form-control rounded-3" placeholder="e.g., Barbell Bench Press" />
+                            <label asp-for="Name">Exercise Name</label>
+                            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Description" class="form-control rounded-3" style="height: 100px" placeholder="General description..."></textarea>
+                            <label asp-for="Description">Description (Optional)</label>
+                            <span asp-validation-for="Description" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="MuscleGroupId" asp-items="@(new SelectList(Model.MuscleGroups, "Id", "Name"))" class="form-select rounded-3">
+                                        <option value="">-- Select Muscle Group --</option>
+                                    </select>
+                                    <label asp-for="MuscleGroupId">Target Muscle Group</label>
+                                    <span asp-validation-for="MuscleGroupId" class="text-danger small mt-1 d-block"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="EquipmentId" asp-items="@(new SelectList(Model.Equipment, "Id", "Name"))" class="form-select rounded-3">
+                                        <option value="">-- Select Equipment --</option>
+                                    </select>
+                                    <label asp-for="EquipmentId">Required Equipment</label>
+                                    <span asp-validation-for="EquipmentId" class="text-danger small mt-1 d-block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Instructions" class="form-control rounded-3" style="height: 150px" placeholder="Step-by-step performance instructions..."></textarea>
+                            <label asp-for="Instructions">Step-by-step Instructions</label>
+                            <span asp-validation-for="Instructions" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-5">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                &larr; Back to Library
+                            </a>
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow-sm">
+                                Create Exercise
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

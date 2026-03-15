@@ -24,4 +24,8 @@
     <ProjectReference Include="..\GainBase.Web.ViewModels\GainBase.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

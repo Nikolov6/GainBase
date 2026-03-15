@@ -5,5 +5,6 @@ namespace GainBase.Services.Core.Contracts
     public interface IEquipmentService
     {
         Task<IEnumerable<EquipmentViewModel>> GetAllEquipmentAsync();
+        Task<bool> ExistsByIdAsync(int id);
     }
 }

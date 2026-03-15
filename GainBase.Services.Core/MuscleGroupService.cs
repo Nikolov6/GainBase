@@ -29,5 +29,14 @@ namespace GainBase.Services.Core
 
             return allMuscleGroups;
         }
+
+        public async Task<bool> ExistsByIdAsync(int id)
+        {
+            bool muscleGroupExists = await dbContext.MuscleGroups
+                .AsNoTracking()
+                .AnyAsync(e => e.Id == id);
+
+            return muscleGroupExists;
+        }
     }
 }

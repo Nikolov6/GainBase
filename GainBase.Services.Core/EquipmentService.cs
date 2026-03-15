@@ -28,5 +28,14 @@ namespace GainBase.Services.Core
 
             return AllEquipment;
         }
+
+        public async Task<bool> ExistsByIdAsync(int id)
+        {
+            bool equipmentExists = await dbContext.Equipment
+                .AsNoTracking()
+                .AnyAsync(e => e.Id == id);
+
+            return equipmentExists;
+        }
     }
 }
