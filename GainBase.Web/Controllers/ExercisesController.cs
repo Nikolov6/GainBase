@@ -12,7 +12,7 @@ namespace GainBase.Web.Controllers
         private readonly IExerciseService exerciseService;
         private readonly IEquipmentService equipmentService;
         private readonly IMuscleGroupService muscleGroupService;
-        
+
         private readonly ILogger<ExercisesController> logger;
 
 
@@ -22,7 +22,7 @@ namespace GainBase.Web.Controllers
             this.exerciseService = exerciseService;
             this.equipmentService = equipmentService;
             this.muscleGroupService = muscleGroupService;
-           
+
             this.logger = logger;
         }
 
@@ -62,7 +62,7 @@ namespace GainBase.Web.Controllers
             }
 
             bool muscleGroupExists = await muscleGroupService.ExistsByIdAsync(model.MuscleGroupId);
-            if(!muscleGroupExists)
+            if (!muscleGroupExists)
             {
                 ModelState.AddModelError(nameof(model.MuscleGroupId), "Selected muscle group does not exist.");
                 model.MuscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
@@ -71,7 +71,7 @@ namespace GainBase.Web.Controllers
             }
 
             bool equipmentExists = await equipmentService.ExistsByIdAsync(model.EquipmentId);
-            if(!equipmentExists)
+            if (!equipmentExists)
             {
                 ModelState.AddModelError(nameof(model.EquipmentId), "Selected equipment does not exist.");
                 model.MuscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
@@ -89,11 +89,20 @@ namespace GainBase.Web.Controllers
             catch (Exception e)
             {
                 this.logger.LogError(e, "An error occurred while creating an exercise.");
-                
+
                 ModelState.AddModelError(string.Empty, "An error occurred while creating the exercise. Please try again later.");
 
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> MyFavorites()
+        {
+            string userId = GetCurrentUserId()!;
+            IEnumerable<ExerciseFavoriteViewModel> favoriteExercises = await exerciseService.GetUserFavoritesAsync(userId);
+            return View(favoriteExercises);
         }
     }
 }

@@ -55,6 +55,52 @@ namespace GainBase.Services.Core
             await dbContext.Exercises.AddAsync(newExercise);
             await dbContext.SaveChangesAsync();
         }
-        
+
+        public async Task<IEnumerable<ExerciseFavoriteViewModel>> GetUserFavoritesAsync(string userId)
+        {
+            IEnumerable<ExerciseFavoriteViewModel> userFavorites = await dbContext.Exercises
+                .Include(e => e.MuscleGroup)
+                .Include(e => e.Equipment)
+                .Include(e => e.UserExercises)
+                .AsNoTracking()
+                .Where(e => e.UserExercises.Any(ue => ue.UserId == userId))
+                .Select(e => new ExerciseFavoriteViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name
+                })
+                .OrderBy(e => e.Name)
+                .ThenBy(e => e.MuscleGroupName)
+                .ToArrayAsync();
+
+            return userFavorites;
+        }
+
+        public Task AddToUserFavoritesAsync(Guid exerciseId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ExistsByIdAsync(Guid exerciseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsExerciseInUserFavoritesAsync(Guid exerciseId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsExerciseCreatorAsync(Guid exerciseId, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

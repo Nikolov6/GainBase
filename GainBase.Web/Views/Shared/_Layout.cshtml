@@ -10,7 +10,6 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <!-- Applied custom dark theme and removed bg-white/navbar-light -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm custom-navbar mb-4">
             <div class="container-fluid">
                 <a class="navbar-brand text-uppercase" asp-area="" asp-controller="Home" asp-action="Index">GainBase</a>
@@ -21,12 +20,17 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <!-- Removed text-dark in favor of the custom css styling -->
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Exercises" asp-action="Index">Exercises</a>
+                            <a class="nav-link" asp-area="" asp-controller="Exercises" asp-action="Index">All Exercises</a>
                         </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Exercises" asp-action="MyFavorites">⭐Favorites</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -35,19 +39,18 @@
     </header>
     
     <div class="container flex-grow-1 d-flex flex-column">
-        <!-- Added flex-grow-1 here so the main content expands -->
         <main role="main" class="pb-3 flex-grow-1">
             @RenderBody()
         </main>
     </div>
 
-    <!-- mt-auto pushes the footer to the very bottom -->
     <footer class="custom-footer py-4 mt-auto">
         <div class="container text-center">
             &copy; 2026 - <span class="text-accent fw-bold text-uppercase">GainBase</span>
         </div>
     </footer>
     
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
