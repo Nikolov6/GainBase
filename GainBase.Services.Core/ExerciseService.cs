@@ -1,6 +1,6 @@
 ﻿using GainBase.Data;
 using GainBase.Services.Core.Contracts;
-using GainBase.Web.ViewModels;
+using GainBase.Web.ViewModels.Exercise;
 using Microsoft.EntityFrameworkCore;
 
 namespace GainBase.Services.Core

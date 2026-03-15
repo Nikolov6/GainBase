@@ -1,5 +1,5 @@
 ﻿using GainBase.Services.Core.Contracts;
-using GainBase.Web.ViewModels;
+using GainBase.Web.ViewModels.Exercise;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GainBase.Web.Controllers

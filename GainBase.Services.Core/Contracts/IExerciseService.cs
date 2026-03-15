@@ -1,4 +1,4 @@
-﻿using GainBase.Web.ViewModels;
+﻿using GainBase.Web.ViewModels.Exercise;
 
 namespace GainBase.Services.Core.Contracts
 {

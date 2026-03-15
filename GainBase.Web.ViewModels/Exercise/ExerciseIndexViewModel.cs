@@ -1,4 +1,4 @@
-namespace GainBase.Web.ViewModels
+namespace GainBase.Web.ViewModels.Exercise
 {
     public class ExerciseIndexViewModel
     {
