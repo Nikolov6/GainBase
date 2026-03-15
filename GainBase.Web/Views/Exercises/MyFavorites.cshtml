@@ -5,6 +5,9 @@
     ViewData["Title"] = "My Favorites";
 }
 
+<div class="container mt-4">
+    <partial name="_ErrorAlertPartial" />
+
     @if (!Model.Any())
     {
         <div class="text-center py-5">
@@ -59,3 +62,4 @@
             }
         </div>
     }
+</div>

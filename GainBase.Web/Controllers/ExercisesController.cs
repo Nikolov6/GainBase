@@ -135,5 +135,28 @@ namespace GainBase.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFavorites(Guid exerciseId)
+        {
+            string userId = GetCurrentUserId()!;
+
+            bool isAlreadyInFavorites = await exerciseService.IsExerciseInUserFavoritesAsync(exerciseId, userId);
+            if (isAlreadyInFavorites)
+            {
+                try
+                {
+                    await exerciseService.RemoveFromUserFavoritesAsync(exerciseId, userId);
+                }
+                catch (Exception e)
+                {
+                    this.logger.LogError(e, "An error occurred while removing the exercise from favorites. Please try again later.");
+                    TempData["ErrorMessage"] = "An error occurred while removing the exercise from favorites. Please try again later.";
+                }
+            }
+
+            return RedirectToAction(nameof(MyFavorites));
+        }
     }
 }

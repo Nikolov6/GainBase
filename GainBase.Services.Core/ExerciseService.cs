@@ -118,9 +118,17 @@ namespace GainBase.Services.Core
             return isCreator;
         }
 
-        public Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId)
+        public async Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId)
         {
-            throw new NotImplementedException();
+            UserExercise? userExerciseToRemove = await dbContext.UsersExercises
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ue => ue.ExerciseId == exerciseId && ue.UserId == userId);
+
+            if (userExerciseToRemove != null)
+            {
+                dbContext.UsersExercises.Remove(userExerciseToRemove);
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }
