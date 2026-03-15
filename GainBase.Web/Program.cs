@@ -27,6 +27,7 @@ namespace GainBase.Web
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IExerciseService, ExerciseService>();
+            builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 
             WebApplication app = builder.Build();
 
