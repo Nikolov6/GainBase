@@ -4,6 +4,7 @@ using GainBase.Web.ViewModels.Exercise;
 using GainBase.Web.ViewModels.MuscleGroup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace GainBase.Web.Controllers
 {
@@ -103,6 +104,13 @@ namespace GainBase.Web.Controllers
             string userId = GetCurrentUserId()!;
             IEnumerable<ExerciseFavoriteViewModel> favoriteExercises = await exerciseService.GetUserFavoritesAsync(userId);
             return View(favoriteExercises);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> AddToFavorites()
+        {
+
         }
     }
 }

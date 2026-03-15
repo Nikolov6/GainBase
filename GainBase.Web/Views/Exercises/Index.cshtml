@@ -60,7 +60,7 @@
                                 
                                 @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
                                 {
-                                    <form asp-action="AddToMyFavorites" asp-controller="Exercises" method="post" m-0>
+                                    <form asp-action="AddToFavorites" asp-controller="Exercises" method="post" m-0>
                                         <input type="hidden" name="exerciseId" value="@exercise.Id" />
                                         <button type="submit" class="btn btn-warning btn-rounded px-3 shadow-sm text-dark h-100" title="Add to Favorites">
                                             ⭐

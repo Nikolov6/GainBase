@@ -12,5 +12,6 @@ namespace GainBase.Web.ViewModels.Exercise
         public string Name { get; set; } = null!;
         public string MuscleGroupName { get; set; } = null!;
         public string EquipmentName { get; set; } = null!;
+        public string SavedAt { get; set; } = null!;
     }
 }

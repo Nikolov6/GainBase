@@ -9,7 +9,6 @@ namespace GainBase.Services.Core.Contracts
         Task<IEnumerable<ExerciseFavoriteViewModel>> GetUserFavoritesAsync(string userId);
         Task AddToUserFavoritesAsync(Guid exerciseId, string userId);
         Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId);
-        Task<bool> ExistsByIdAsync(Guid exerciseId);
         Task<bool> IsExerciseInUserFavoritesAsync(Guid exerciseId, string userId);
         Task<bool> IsExerciseCreatorAsync(Guid exerciseId, string userId);
     }
