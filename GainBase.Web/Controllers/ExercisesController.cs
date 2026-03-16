@@ -34,6 +34,21 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            string? currentUserId = GetCurrentUserId();
+            ExerciseDetailsViewModel? model = await exerciseService.GetExerciseDetailsAsync(id, currentUserId);
+
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = "Exercise was not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Create()
         {
@@ -180,7 +195,7 @@ namespace GainBase.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddToFavorites(Guid exerciseId)
+        public async Task<IActionResult> AddToFavorites(Guid exerciseId, string? returnUrl = null)
         {
             string userId = GetCurrentUserId()!;
 
@@ -188,7 +203,7 @@ namespace GainBase.Web.Controllers
             if (isUserCreator)
             {
                 TempData["ErrorMessage"] = "You cannot add your own exercise to favorites.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToLocalOrDefault(returnUrl, nameof(Index));
             }
 
             bool isAlreadyInFavorites = await exerciseService.IsExerciseInUserFavoritesAsync(exerciseId, userId);
@@ -205,12 +220,12 @@ namespace GainBase.Web.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToLocalOrDefault(returnUrl, nameof(Index));
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> RemoveFromFavorites(Guid exerciseId)
+        public async Task<IActionResult> RemoveFromFavorites(Guid exerciseId, string? returnUrl = null)
         {
             string userId = GetCurrentUserId()!;
 
@@ -228,7 +243,17 @@ namespace GainBase.Web.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(MyFavorites));
+            return RedirectToLocalOrDefault(returnUrl, nameof(MyFavorites));
+        }
+
+        private IActionResult RedirectToLocalOrDefault(string? returnUrl, string defaultAction)
+        {
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction(defaultAction);
         }
 
         private async Task PopulateExerciseFormCollectionsAsync(ExerciseFormModel model)

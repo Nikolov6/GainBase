@@ -41,6 +41,34 @@ namespace GainBase.Services.Core
             return allExercises;
         }
 
+        public async Task<ExerciseDetailsViewModel?> GetExerciseDetailsAsync(Guid exerciseId, string? currentUserId)
+        {
+            ExerciseDetailsViewModel? details = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.Id == exerciseId)
+                .Select(e => new ExerciseDetailsViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Description = e.Description,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name,
+                    Instructions = e.Instructions,
+                    CreatorUserName = e.Creator.UserName ?? "Unknown",
+                    CreatedAt = e.CreatedAt.ToString(DateTimeFormat),
+                    UpdatedAt = e.UpdatedAt.HasValue
+                        ? e.UpdatedAt.Value.ToString(DateTimeFormat)
+                        : null,
+                    FavoritesCount = e.UserExercises.Count,
+                    IsUserAuthenticated = !string.IsNullOrWhiteSpace(currentUserId),
+                    IsCreatedByCurrentUser = e.CreatorId == currentUserId,
+                    IsInUserFavorites = e.UserExercises.Any(ue => ue.UserId == currentUserId)
+                })
+                .FirstOrDefaultAsync();
+
+            return details;
+        }
+
         public async Task CreateExerciseAsync(ExerciseFormModel model, string userId)
         {
             Exercise newExercise = new Exercise
