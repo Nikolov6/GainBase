@@ -26,11 +26,14 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] AllExercisesQueryModel queryModel)
         {
             string? currentUserId = GetCurrentUserId();
-            IEnumerable<ExerciseIndexViewModel> exercises = await exerciseService.GetAllExercisesAsync(currentUserId);
-            return View(exercises);
+
+            await PopulateExerciseQueryCollectionsAsync(queryModel);
+            queryModel.Exercises = await exerciseService.GetAllExercisesAsync(queryModel, currentUserId);
+
+            return View(queryModel);
         }
 
         [HttpGet]
@@ -300,6 +303,15 @@ namespace GainBase.Web.Controllers
         }
 
         private async Task PopulateExerciseFormCollectionsAsync(ExerciseFormModel model)
+        {
+            IEnumerable<EquipmentViewModel> equipment = await equipmentService.GetAllEquipmentAsync();
+            IEnumerable<MuscleGroupViewModel> muscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
+
+            model.Equipment = equipment;
+            model.MuscleGroups = muscleGroups;
+        }
+
+        private async Task PopulateExerciseQueryCollectionsAsync(AllExercisesQueryModel model)
         {
             IEnumerable<EquipmentViewModel> equipment = await equipmentService.GetAllEquipmentAsync();
             IEnumerable<MuscleGroupViewModel> muscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();

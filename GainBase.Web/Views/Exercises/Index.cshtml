@@ -1,12 +1,13 @@
 ﻿@using GainBase.Web.ViewModels.Exercise
-@model IEnumerable<ExerciseIndexViewModel>
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model AllExercisesQueryModel
 
 @{
     ViewData["Title"] = "Discover Exercises";
 }
 
 <div class="container mt-4">
-	<partial name="_AlertPartial" />
+    <partial name="_AlertPartial" />
 
     <div class="hero-section d-flex justify-content-between align-items-center flex-wrap gap-4">
         <div>
@@ -21,30 +22,50 @@
         }
     </div>
 
-    @if (!Model.Any())
+    <form method="get" asp-action="Index" asp-controller="Exercises" class="row g-3 mt-3 mb-4">
+        <div class="col-12 col-md-5">
+            <label asp-for="MuscleGroupId" class="form-label fw-semibold">Muscle Group</label>
+            <select asp-for="MuscleGroupId" asp-items="@(new SelectList(Model.MuscleGroups, "Id", "Name"))" class="form-select">
+                <option value="">All muscle groups</option>
+            </select>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <label asp-for="EquipmentId" class="form-label fw-semibold">Equipment</label>
+            <select asp-for="EquipmentId" asp-items="@(new SelectList(Model.Equipment, "Id", "Name"))" class="form-select">
+                <option value="">All equipment</option>
+            </select>
+        </div>
+
+        <div class="col-12 col-md-2 d-grid align-self-end">
+            <button type="submit" class="btn btn-dark">Filter</button>
+        </div>
+    </form>
+
+    @if (!Model.Exercises.Any())
     {
         <div class="text-center py-5">
             <div class="display-1 text-muted opacity-25 mb-3">🏋️‍♂️</div>
             <h3 class="text-muted fw-bold">No exercises found</h3>
-            <p class="text-secondary">Be the first to add an exercise to the library!</p>
+            <p class="text-secondary">Try changing your filters or add a new exercise.</p>
         </div>
     }
     else
     {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-5">
-            @foreach (var exercise in Model)
+            @foreach (var exercise in Model.Exercises)
             {
                 <div class="col">
                     <div class="card h-100 exercise-card shadow-sm">
                         <div class="card-body p-4 d-flex flex-column">
-                            
+
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <h4 class="fw-bold text-dark mb-0">@exercise.Name</h4>
                                 <span class="badge bg-dark rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-1" title="Favorited by @exercise.FavoritesCount users">
                                     ⭐ @exercise.FavoritesCount
                                 </span>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <span class="badge badge-soft-primary px-3 py-2 rounded-pill me-2 mb-2">
                                     @exercise.MuscleGroupName
@@ -55,22 +76,23 @@
                             </div>
 
                             <div class="d-flex gap-2 mt-auto pt-3 border-top border-light">
-                                <a asp-action="Details" asp-controller="Exercises" asp-route-id="@exercise.Id" 
+                                <a asp-action="Details" asp-controller="Exercises" asp-route-id="@exercise.Id"
                                    class="btn btn-outline-dark flex-grow-1 btn-rounded fw-medium">
                                     View Details
                                 </a>
-                                
+
                                 @if (!exercise.IsCreatedByCurrentUser && !exercise.IsInUserFavorites && User.Identity?.IsAuthenticated == true)
                                 {
                                     <form asp-action="AddToFavorites" asp-controller="Exercises" method="post" class="m-0">
                                         <input type="hidden" name="exerciseId" value="@exercise.Id" />
+                                        <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
                                         <button type="submit" class="btn btn-warning btn-rounded px-3 shadow-sm text-dark h-100" title="Add to Favorites">
                                             ⭐
                                         </button>
                                     </form>
                                 }
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

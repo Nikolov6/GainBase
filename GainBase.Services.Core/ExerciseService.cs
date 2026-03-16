@@ -16,13 +16,27 @@ namespace GainBase.Services.Core
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ExerciseIndexViewModel>> GetAllExercisesAsync(string? currentUserId)
+        public async Task<IEnumerable<ExerciseIndexViewModel>> GetAllExercisesAsync(AllExercisesQueryModel queryModel, string? currentUserId)
         {
-            IEnumerable<ExerciseIndexViewModel> allExercises = await dbContext.Exercises
+            IQueryable<Exercise> exercisesQuery = dbContext.Exercises
                 .Include(e => e.MuscleGroup)
                 .Include(e => e.Equipment)
                 .Include(e => e.UserExercises)
-                .AsNoTracking()
+                .AsNoTracking();
+
+            if (queryModel.MuscleGroupId.HasValue)
+            {
+                exercisesQuery = exercisesQuery
+                    .Where(e => e.MuscleGroupId == queryModel.MuscleGroupId.Value);
+            }
+
+            if (queryModel.EquipmentId.HasValue)
+            {
+                exercisesQuery = exercisesQuery
+                    .Where(e => e.EquipmentId == queryModel.EquipmentId.Value);
+            }
+
+            IEnumerable<ExerciseIndexViewModel> allExercises = await exercisesQuery
                 .Select(e => new ExerciseIndexViewModel
                 {
                     Id = e.Id,

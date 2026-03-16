@@ -4,7 +4,7 @@ namespace GainBase.Services.Core.Contracts
 {
     public interface IExerciseService
     {
-        Task<IEnumerable<ExerciseIndexViewModel>> GetAllExercisesAsync(string? currentUserId);
+        Task<IEnumerable<ExerciseIndexViewModel>> GetAllExercisesAsync(AllExercisesQueryModel queryModel, string? currentUserId);
         Task<ExerciseDetailsViewModel?> GetExerciseDetailsAsync(Guid exerciseId, string? currentUserId);
         Task CreateExerciseAsync(ExerciseFormModel model, string userId);
         Task<IEnumerable<ExerciseFavoriteViewModel>> GetUserFavoritesAsync(string userId);
