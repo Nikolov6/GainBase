@@ -162,7 +162,7 @@ Connection string is configured in `appsettings.json`:
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost\SQLEXPRESS;Database=GainBase;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False"
+  "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=GainBase;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False"
 }
 ```
 
