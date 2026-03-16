@@ -208,5 +208,41 @@ namespace GainBase.Services.Core
             await dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<ExerciseDeleteViewModel?> GetExerciseForDeleteAsync(Guid exerciseId, string userId)
+        {
+            ExerciseDeleteViewModel? model = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.Id == exerciseId && e.CreatorId == userId)
+                .Select(e => new ExerciseDeleteViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Description = e.Description,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name,
+                    CreatedAt = e.CreatedAt.ToString(DateTimeFormat),
+                    FavoritesCount = e.UserExercises.Count
+                })
+                .FirstOrDefaultAsync();
+
+            return model;
+        }
+
+        public async Task<bool> DeleteExerciseAsync(Guid exerciseId, string userId)
+        {
+            Exercise? exerciseToDelete = await dbContext.Exercises
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId);
+
+            if (exerciseToDelete == null)
+            {
+                return false;
+            }
+
+            dbContext.Exercises.Remove(exerciseToDelete);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

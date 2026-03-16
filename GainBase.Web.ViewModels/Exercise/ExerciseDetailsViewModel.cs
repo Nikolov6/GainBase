@@ -22,6 +22,7 @@ namespace GainBase.Web.ViewModels.Exercise
         public bool IsInUserFavorites { get; set; }
 
         public bool CanEdit => IsCreatedByCurrentUser;
+        public bool CanDelete => IsCreatedByCurrentUser;
         public bool CanAddToFavorites => IsUserAuthenticated && !IsCreatedByCurrentUser && !IsInUserFavorites;
         public bool CanRemoveFromFavorites => IsUserAuthenticated && !IsCreatedByCurrentUser && IsInUserFavorites;
     }

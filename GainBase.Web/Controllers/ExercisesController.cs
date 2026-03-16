@@ -177,6 +177,49 @@ namespace GainBase.Web.Controllers
 
         [HttpGet]
         [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            string userId = GetCurrentUserId()!;
+            ExerciseDeleteViewModel? model = await exerciseService.GetExerciseForDeleteAsync(id, userId);
+
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = "Exercise was not found or you do not have permission to delete it.";
+                return RedirectToAction(nameof(MyExercises));
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                string userId = GetCurrentUserId()!;
+                bool isDeleted = await exerciseService.DeleteExerciseAsync(id, userId);
+
+                if (!isDeleted)
+                {
+                    TempData["ErrorMessage"] = "Exercise was not found or you do not have permission to delete it.";
+                    return RedirectToAction(nameof(MyExercises));
+                }
+
+                TempData["SuccessMessage"] = "Exercise deleted successfully.";
+                return RedirectToAction(nameof(MyExercises));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "An error occurred while deleting exercise with id {ExerciseId}.", id);
+                TempData["ErrorMessage"] = "An error occurred while deleting the exercise. Please try again later.";
+                return RedirectToAction(nameof(MyExercises));
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MyFavorites()
         {
             string userId = GetCurrentUserId()!;

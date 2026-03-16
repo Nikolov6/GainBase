@@ -88,6 +88,13 @@
                     </a>
                 }
 
+                @if (Model.CanDelete)
+                {
+                    <a asp-action="Delete" asp-controller="Exercises" asp-route-id="@Model.Id" class="btn btn-danger rounded-pill px-4">
+                        Delete
+                    </a>
+                }
+
                 @if (Model.CanAddToFavorites)
                 {
                     <form asp-action="AddToFavorites" asp-controller="Exercises" method="post" class="m-0">
