@@ -141,5 +141,44 @@ namespace GainBase.Services.Core
                 await dbContext.SaveChangesAsync();
             }
         }
+
+        public async Task<ExerciseFormModel?> GetExerciseForEditAsync(Guid exerciseId, string userId)
+        {
+            ExerciseFormModel? model = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.Id == exerciseId && e.CreatorId == userId)
+                .Select(e => new ExerciseFormModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Description = e.Description,
+                    MuscleGroupId = e.MuscleGroupId,
+                    EquipmentId = e.EquipmentId,
+                    Instructions = e.Instructions
+                })
+                .FirstOrDefaultAsync();
+
+            return model;
+        }
+
+        public async Task<bool> EditExerciseAsync(Guid exerciseId, ExerciseFormModel model, string userId)
+        {
+            Exercise? exerciseToEdit = await dbContext.Exercises
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId);
+
+            if (exerciseToEdit == null)
+            {
+                return false;
+            }
+
+            exerciseToEdit.Name = model.Name;
+            exerciseToEdit.Description = model.Description;
+            exerciseToEdit.MuscleGroupId = model.MuscleGroupId;
+            exerciseToEdit.EquipmentId = model.EquipmentId;
+            exerciseToEdit.Instructions = model.Instructions;
+
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

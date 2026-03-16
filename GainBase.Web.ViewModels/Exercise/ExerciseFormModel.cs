@@ -7,6 +7,8 @@ namespace GainBase.Web.ViewModels.Exercise
 {
     public class ExerciseFormModel
     {
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(ExerciseNameMaxLength, MinimumLength = ExerciseNameMinLength)]
         public string Name { get; set; } = null!;

@@ -4,7 +4,6 @@ using GainBase.Web.ViewModels.Exercise;
 using GainBase.Web.ViewModels.MuscleGroup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace GainBase.Web.Controllers
 {
@@ -15,7 +14,6 @@ namespace GainBase.Web.Controllers
         private readonly IMuscleGroupService muscleGroupService;
 
         private readonly ILogger<ExercisesController> logger;
-
 
         public ExercisesController(IExerciseService exerciseService, IEquipmentService equipmentService,
             IMuscleGroupService muscleGroupService, ILogger<ExercisesController> logger)
@@ -39,14 +37,8 @@ namespace GainBase.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            IEnumerable<EquipmentViewModel> equipment = await equipmentService.GetAllEquipmentAsync();
-            IEnumerable<MuscleGroupViewModel> muscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
-
-            ExerciseFormModel model = new ExerciseFormModel
-            {
-                Equipment = equipment,
-                MuscleGroups = muscleGroups
-            };
+            ExerciseFormModel model = new ExerciseFormModel();
+            await PopulateExerciseFormCollectionsAsync(model);
 
             return View(model);
         }
@@ -57,8 +49,7 @@ namespace GainBase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.MuscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
-                model.Equipment = await equipmentService.GetAllEquipmentAsync();
+                await PopulateExerciseFormCollectionsAsync(model);
                 return View(model);
             }
 
@@ -66,8 +57,7 @@ namespace GainBase.Web.Controllers
             if (!muscleGroupExists)
             {
                 ModelState.AddModelError(nameof(model.MuscleGroupId), "Selected muscle group does not exist.");
-                model.MuscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
-                model.Equipment = await equipmentService.GetAllEquipmentAsync();
+                await PopulateExerciseFormCollectionsAsync(model);
                 return View(model);
             }
 
@@ -75,8 +65,7 @@ namespace GainBase.Web.Controllers
             if (!equipmentExists)
             {
                 ModelState.AddModelError(nameof(model.EquipmentId), "Selected equipment does not exist.");
-                model.MuscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
-                model.Equipment = await equipmentService.GetAllEquipmentAsync();
+                await PopulateExerciseFormCollectionsAsync(model);
                 return View(model);
             }
 
@@ -89,9 +78,83 @@ namespace GainBase.Web.Controllers
             }
             catch (Exception e)
             {
-                this.logger.LogError(e, "An error occurred while creating an exercise.");
+                logger.LogError(e, "An error occurred while creating an exercise.");
 
                 ModelState.AddModelError(string.Empty, "An error occurred while creating the exercise. Please try again later.");
+                await PopulateExerciseFormCollectionsAsync(model);
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            string userId = GetCurrentUserId()!;
+            ExerciseFormModel? model = await exerciseService.GetExerciseForEditAsync(id, userId);
+
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = "Exercise was not found or you do not have permission to edit it.";
+                return RedirectToAction(nameof(MyExercises));
+            }
+
+            await PopulateExerciseFormCollectionsAsync(model);
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id, ExerciseFormModel model)
+        {
+            if (id != model.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await PopulateExerciseFormCollectionsAsync(model);
+                return View(model);
+            }
+
+            bool muscleGroupExists = await muscleGroupService.ExistsByIdAsync(model.MuscleGroupId);
+            if (!muscleGroupExists)
+            {
+                ModelState.AddModelError(nameof(model.MuscleGroupId), "Selected muscle group does not exist.");
+                await PopulateExerciseFormCollectionsAsync(model);
+                return View(model);
+            }
+
+            bool equipmentExists = await equipmentService.ExistsByIdAsync(model.EquipmentId);
+            if (!equipmentExists)
+            {
+                ModelState.AddModelError(nameof(model.EquipmentId), "Selected equipment does not exist.");
+                await PopulateExerciseFormCollectionsAsync(model);
+                return View(model);
+            }
+
+            try
+            {
+                string userId = GetCurrentUserId()!;
+                bool isEdited = await exerciseService.EditExerciseAsync(id, model, userId);
+
+                if (!isEdited)
+                {
+                    TempData["ErrorMessage"] = "Exercise was not found or you do not have permission to edit it.";
+                    return RedirectToAction(nameof(MyExercises));
+                }
+
+                TempData["SuccessMessage"] = "Exercise updated successfully.";
+                return RedirectToAction(nameof(MyExercises));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "An error occurred while editing exercise with id {ExerciseId}.", id);
+
+                ModelState.AddModelError(string.Empty, "An error occurred while editing the exercise. Please try again later.");
+                await PopulateExerciseFormCollectionsAsync(model);
 
                 return View(model);
             }
@@ -137,7 +200,7 @@ namespace GainBase.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    this.logger.LogError(e, "An error occurred while adding the exercise to favorites. Please try again later.");
+                    logger.LogError(e, "An error occurred while adding the exercise to favorites. Please try again later.");
                     TempData["ErrorMessage"] = "An error occurred while adding the exercise to favorites. Please try again later.";
                 }
             }
@@ -160,12 +223,21 @@ namespace GainBase.Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    this.logger.LogError(e, "An error occurred while removing the exercise from favorites. Please try again later.");
+                    logger.LogError(e, "An error occurred while removing the exercise from favorites. Please try again later.");
                     TempData["ErrorMessage"] = "An error occurred while removing the exercise from favorites. Please try again later.";
                 }
             }
 
             return RedirectToAction(nameof(MyFavorites));
+        }
+
+        private async Task PopulateExerciseFormCollectionsAsync(ExerciseFormModel model)
+        {
+            IEnumerable<EquipmentViewModel> equipment = await equipmentService.GetAllEquipmentAsync();
+            IEnumerable<MuscleGroupViewModel> muscleGroups = await muscleGroupService.GetAllMuscleGroupsAsync();
+
+            model.Equipment = equipment;
+            model.MuscleGroups = muscleGroups;
         }
     }
 }

@@ -12,5 +12,7 @@ namespace GainBase.Services.Core.Contracts
         Task RemoveFromUserFavoritesAsync(Guid exerciseId, string userId);
         Task<bool> IsExerciseInUserFavoritesAsync(Guid exerciseId, string userId);
         Task<bool> IsExerciseCreatorAsync(Guid exerciseId, string userId);
+        Task<ExerciseFormModel?> GetExerciseForEditAsync(Guid exerciseId, string userId);
+        Task<bool> EditExerciseAsync(Guid exerciseId, ExerciseFormModel model, string userId);
     }
 }
