@@ -59,26 +59,18 @@ namespace GainBase.Services.Core
 
         public async Task<IEnumerable<ExerciseFavoriteViewModel>> GetUserFavoritesAsync(string userId)
         {
-            IEnumerable<ExerciseFavoriteViewModel> userFavorites = await dbContext.Exercises
-                .Include(e => e.MuscleGroup)
-                .Include(e => e.Equipment)
-                .Include(e => e.UserExercises)
+            IEnumerable<ExerciseFavoriteViewModel> userFavorites = await dbContext.UsersExercises
                 .AsNoTracking()
-                .Where(e => e.UserExercises.Any(ue => ue.UserId == userId))
-                .Select(e => new ExerciseFavoriteViewModel
+                .Where(ue => ue.UserId == userId)
+                .OrderByDescending(ue => ue.SavedAt)
+                .Select(ue => new ExerciseFavoriteViewModel
                 {
-                    Id = e.Id,
-                    Name = e.Name,
-                    MuscleGroupName = e.MuscleGroup.Name,
-                    EquipmentName = e.Equipment.Name,
-                    SavedAt = e.UserExercises
-                        .Where(ue => ue.UserId == userId)
-                        .Select(ue => ue.SavedAt)
-                        .FirstOrDefault()
-                        .ToString(DateTimeFormat)
+                    Id = ue.Exercise.Id,
+                    Name = ue.Exercise.Name,
+                    MuscleGroupName = ue.Exercise.MuscleGroup.Name,
+                    EquipmentName = ue.Exercise.Equipment.Name,
+                    SavedAt = ue.SavedAt.ToString(DateTimeFormat)
                 })
-                .OrderBy(e => e.Name)
-                .ThenBy(e => e.MuscleGroupName)
                 .ToArrayAsync();
 
             return userFavorites;
