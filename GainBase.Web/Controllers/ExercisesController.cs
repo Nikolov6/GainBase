@@ -106,6 +106,15 @@ namespace GainBase.Web.Controllers
             return View(favoriteExercises);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> MyExercises()
+        {
+            string userId = GetCurrentUserId()!;
+            IEnumerable<ExerciseMyViewModel> myExercises = await exerciseService.GetUserCreatedExercisesAsync(userId);
+            return View(myExercises);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddToFavorites(Guid exerciseId)

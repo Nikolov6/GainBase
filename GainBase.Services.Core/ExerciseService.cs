@@ -76,6 +76,25 @@ namespace GainBase.Services.Core
             return userFavorites;
         }
 
+        public async Task<IEnumerable<ExerciseMyViewModel>> GetUserCreatedExercisesAsync(string userId)
+        {
+            IEnumerable<ExerciseMyViewModel> myExercises = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.CreatorId == userId)
+                .OrderByDescending(e => e.CreatedAt)
+                .Select(e => new ExerciseMyViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name,
+                    CreatedAt = e.CreatedAt.ToString(DateTimeFormat)
+                })
+                .ToArrayAsync();
+
+            return myExercises;
+        }
+
         public async Task AddToUserFavoritesAsync(Guid exerciseId, string userId)
         {
             Exercise? exercise = await dbContext.Exercises
