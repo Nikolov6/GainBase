@@ -19,7 +19,7 @@ namespace GainBase.Web
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services
-                .AddDefaultIdentity<IdentityUser>(options => 
+                .AddDefaultIdentity<IdentityUser>(options =>
                 {
                     ConfigureIdentity(options, builder.Configuration);
                 })
@@ -29,6 +29,7 @@ namespace GainBase.Web
             builder.Services.AddScoped<IExerciseService, ExerciseService>();
             builder.Services.AddScoped<IEquipmentService, EquipmentService>();
             builder.Services.AddScoped<IMuscleGroupService, MuscleGroupService>();
+            builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 
             WebApplication app = builder.Build();
 

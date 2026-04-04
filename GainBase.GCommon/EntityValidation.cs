@@ -24,5 +24,10 @@ namespace GainBase.GCommon
         public const int MuscleGroupNameMinLength = 3;
         public const int MuscleGroupNameMaxLength = 50;
 
+        // Workout
+        public const int WorkoutNameMinLength = 3;
+        public const int WorkoutNameMaxLength = 60;
+        public const int WorkoutDescriptionMinLength = 10;
+        public const int WorkoutDescriptionMaxLength = 600;
     }
 }

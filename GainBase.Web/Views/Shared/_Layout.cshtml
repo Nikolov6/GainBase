@@ -32,7 +32,10 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Exercises" asp-action="MyFavorites">⭐Favorites</a>
-                            </li>                            
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Workouts" asp-action="MyWorkouts">💪My Workouts</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />
@@ -40,7 +43,7 @@
             </div>
         </nav>
     </header>
-    
+
     <div class="container flex-grow-1 d-flex flex-column">
         <main role="main" class="pb-3 flex-grow-1">
             @RenderBody()
@@ -52,7 +55,6 @@
             &copy; 2026 - <span class="text-accent fw-bold text-uppercase">GainBase</span>
         </div>
     </footer>
-    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

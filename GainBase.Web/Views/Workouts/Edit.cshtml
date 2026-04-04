@@ -1,0 +1,150 @@
+@model WorkoutFormModel
+
+@{
+    ViewData["Title"] = "Edit Workout";
+}
+
+<div class="container mt-4">
+    <partial name="_AlertPartial" />
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-warning text-dark py-3 rounded-top-4">
+                    <h2 class="mb-0 fw-bold fs-4 text-center">@ViewData["Title"]</h2>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                        <input asp-for="Id" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Name" class="form-control rounded-3" placeholder="Workout Name" />
+                            <label asp-for="Name">Workout Name</label>
+                            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Description" class="form-control rounded-3" style="height:100px" placeholder="Description"></textarea>
+                            <label asp-for="Description">Description (Optional)</label>
+                            <span asp-validation-for="Description" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="SelectedExerciseIds" class="form-label fw-semibold d-block">Exercises</label>
+
+                            <div class="border rounded-3 p-3" style="max-height: 340px; overflow-y: auto;">
+                                @foreach (var exercise in Model.AvailableExercises.OrderBy(e => e.Name))
+                                {
+                                    var isChecked = Model.SelectedExerciseIds.Contains(exercise.Id);
+
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input exercise-checkbox"
+                                               type="checkbox"
+                                               value="@exercise.Id"
+                                               data-exercise-id="@exercise.Id"
+                                               data-exercise-name="@exercise.Name"
+                                               id="exercise_@exercise.Id"
+                                               checked="@isChecked" />
+                                        <label class="form-check-label" for="exercise_@exercise.Id">
+                                            <span class="fw-semibold">@exercise.Name</span>
+                                            <span class="text-muted">(@exercise.MuscleGroupName • @exercise.EquipmentName)</span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+
+                            <div id="selectedExercisesContainer"></div>
+
+                            <div class="form-text mt-2">
+                                Selected: <span id="selectedExercisesCount">0</span>
+                            </div>
+
+                            <ol id="selectedExercisesOrder" class="small mt-2 ps-3"></ol>
+
+                            <span asp-validation-for="SelectedExerciseIds" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="MyWorkouts" class="btn btn-outline-secondary rounded-pill px-4">&larr; Back</a>
+                            <button type="submit" class="btn btn-warning rounded-pill px-5 fw-bold">Update Workout</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        (function () {
+            const form = document.querySelector('form[method="post"]');
+            const checkboxes = Array.from(document.querySelectorAll('.exercise-checkbox'));
+            const selectedCountElement = document.getElementById('selectedExercisesCount');
+            const selectedExercisesContainer = document.getElementById('selectedExercisesContainer');
+            const selectedExercisesOrder = document.getElementById('selectedExercisesOrder');
+
+            let selectedExerciseIds = checkboxes
+                .filter(c => c.checked)
+                .map(c => c.dataset.exerciseId);
+
+            function updateSelectedCount() {
+                selectedCountElement.textContent = selectedExerciseIds.length.toString();
+            }
+
+            function renderSelectedOrder() {
+                selectedExercisesOrder.innerHTML = '';
+
+                selectedExerciseIds.forEach(id => {
+                    const checkbox = checkboxes.find(c => c.dataset.exerciseId === id);
+                    if (!checkbox) {
+                        return;
+                    }
+
+                    const li = document.createElement('li');
+                    li.textContent = checkbox.dataset.exerciseName;
+                    selectedExercisesOrder.appendChild(li);
+                });
+            }
+
+            function syncHiddenInputs() {
+                selectedExercisesContainer.innerHTML = '';
+
+                selectedExerciseIds.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'SelectedExerciseIds';
+                    input.value = id;
+                    selectedExercisesContainer.appendChild(input);
+                });
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const id = this.dataset.exerciseId;
+                    const existingIndex = selectedExerciseIds.indexOf(id);
+
+                    if (this.checked && existingIndex === -1) {
+                        selectedExerciseIds.push(id);
+                    } else if (!this.checked && existingIndex !== -1) {
+                        selectedExerciseIds.splice(existingIndex, 1);
+                    }
+
+                    updateSelectedCount();
+                    renderSelectedOrder();
+                    syncHiddenInputs();
+                });
+            });
+
+            form.addEventListener('submit', syncHiddenInputs);
+
+            updateSelectedCount();
+            renderSelectedOrder();
+            syncHiddenInputs();
+        })();
+    </script>
+}

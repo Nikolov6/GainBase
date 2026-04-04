@@ -1,0 +1,53 @@
+@model WorkoutDetailsViewModel
+
+@{
+    ViewData["Title"] = "Workout Details";
+}
+
+<div class="container mt-4">
+    <partial name="_AlertPartial" />
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-dark text-white py-3 rounded-top-4">
+            <h2 class="mb-0 fw-bold fs-4">@Model.Name</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div class="mb-4">
+                <h5 class="fw-bold mb-2">Description</h5>
+                <p class="text-muted mb-0">@(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)</p>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Created On</div>
+                        <div class="fw-semibold">@Model.CreatedAt</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Last Updated</div>
+                        <div class="fw-semibold">@(Model.UpdatedAt ?? "Not updated")</div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3">Exercises</h5>
+            <div class="list-group mb-4">
+                @foreach (var exercise in Model.Exercises)
+                {
+                    <a asp-controller="Exercises"
+                       asp-action="Details"
+                       asp-route-id="@exercise.ExerciseId"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span>@exercise.Name</span>
+                        <small class="text-muted">@exercise.MuscleGroupName • @exercise.EquipmentName</small>
+                    </a>
+                }
+            </div>
+
+            <a asp-action="MyWorkouts" class="btn btn-outline-secondary rounded-pill px-4">&larr; Back to My Workouts</a>
+        </div>
+    </div>
+</div>

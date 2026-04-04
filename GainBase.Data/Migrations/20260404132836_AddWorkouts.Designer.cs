@@ -4,6 +4,7 @@ using GainBase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GainBase.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404132836_AddWorkouts")]
+    partial class AddWorkouts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -404,9 +407,6 @@ namespace GainBase.Data.Migrations
                     b.Property<Guid>("ExerciseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ExecutionOrder")
-                        .HasColumnType("int");
-
                     b.HasKey("WorkoutId", "ExerciseId");
 
                     b.HasIndex("ExerciseId");
@@ -535,15 +535,15 @@ namespace GainBase.Data.Migrations
                         {
                             Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "108d2dcf-036f-4fef-9f99-00a00ffae286",
+                            ConcurrencyStamp = "138a6a20-6bc1-4432-87d4-482e6e21f473",
                             Email = "seeduser@gainbase.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SEEDUSER@GAINBASE.COM",
                             NormalizedUserName = "SEEDUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMHn1jVn2j1CF7qdF0WbEKA26GNuD2xDvXHg8TEZDivaE94zqJ3DSMUl+HtnAXMXZQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFMD0LhZuwR+BgrVM43EDFWnLKkin+6EvqxOXyGx+XZXFpJf6U+S6Qh+v1rR09v5Cg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8e60e9f5-2b9e-4f28-a5b9-2907bd8ce5c6",
+                            SecurityStamp = "daa96b29-e8b9-4a41-8c22-5ac4a797a5b4",
                             TwoFactorEnabled = false,
                             UserName = "SeedUser"
                         });

@@ -17,8 +17,9 @@ namespace GainBase.Data
         public virtual DbSet<MuscleGroup> MuscleGroups { get; set; } = null!;
         public virtual DbSet<Equipment> Equipment { get; set; } = null!;
         public virtual DbSet<UserExercise> UsersExercises { get; set; } = null!;
+        public virtual DbSet<Workout> Workouts { get; set; } = null!;
+        public virtual DbSet<WorkoutExercise> WorkoutExercises { get; set; } = null!;
 
-        
         public override int SaveChanges()
         {
             ApplyTimestamps();
@@ -29,18 +30,26 @@ namespace GainBase.Data
         {
             ApplyTimestamps();
             return await base.SaveChangesAsync(cancellationToken);
-        }    
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
 
         private void ApplyTimestamps()
         {
             foreach (EntityEntry<Exercise> entry in ChangeTracker.Entries<Exercise>())
+            {
+                if (entry.State == EntityState.Added)
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+
+                if (entry.State == EntityState.Modified)
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+
+            foreach (EntityEntry<Workout> entry in ChangeTracker.Entries<Workout>())
             {
                 if (entry.State == EntityState.Added)
                     entry.Entity.CreatedAt = DateTime.UtcNow;
