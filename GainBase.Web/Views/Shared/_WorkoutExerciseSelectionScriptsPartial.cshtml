@@ -5,14 +5,31 @@
         const selectedCountElement = document.getElementById('selectedExercisesCount');
         const selectedExercisesContainer = document.getElementById('selectedExercisesContainer');
         const selectedExercisesOrder = document.getElementById('selectedExercisesOrder');
+        const initialSelectedContainer = document.getElementById('initialSelectedExerciseIds');
 
         if (!form || !checkboxes.length || !selectedCountElement || !selectedExercisesContainer || !selectedExercisesOrder) {
             return;
         }
 
-        let selectedExerciseIds = checkboxes
+        const checkboxIdSet = new Set(checkboxes.map(c => c.dataset.exerciseId));
+        const checkedIdsInDomOrder = checkboxes
             .filter(c => c.checked)
             .map(c => c.dataset.exerciseId);
+
+        const seededIds = initialSelectedContainer
+            ? Array.from(initialSelectedContainer.querySelectorAll('.selected-exercise-order-seed'))
+                .map(i => i.value)
+            : [];
+
+        const validSeededIds = seededIds
+            .filter(id => checkboxIdSet.has(id) && checkedIdsInDomOrder.includes(id));
+
+        const missingCheckedIds = checkedIdsInDomOrder
+            .filter(id => !validSeededIds.includes(id));
+
+        let selectedExerciseIds = validSeededIds.length > 0
+            ? [...validSeededIds, ...missingCheckedIds]
+            : checkedIdsInDomOrder;
 
         function updateSelectedCount() {
             selectedCountElement.textContent = selectedExerciseIds.length.toString();

@@ -71,6 +71,13 @@
                             <button type="submit" class="btn btn-warning rounded-pill px-5 fw-bold">Update Workout</button>
                         </div>
                     </form>
+
+                    <div id="initialSelectedExerciseIds" class="d-none">
+                        @foreach (Guid exerciseId in Model.SelectedExerciseIds)
+                        {
+                            <input type="hidden" class="selected-exercise-order-seed" value="@exerciseId" />
+                        }
+                    </div>
                 </div>
             </div>
         </div>
