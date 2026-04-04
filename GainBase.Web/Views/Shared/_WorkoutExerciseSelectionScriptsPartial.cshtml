@@ -1,0 +1,71 @@
+<script>
+    (function () {
+        const form = document.querySelector('form[method="post"]');
+        const checkboxes = Array.from(document.querySelectorAll('.exercise-checkbox'));
+        const selectedCountElement = document.getElementById('selectedExercisesCount');
+        const selectedExercisesContainer = document.getElementById('selectedExercisesContainer');
+        const selectedExercisesOrder = document.getElementById('selectedExercisesOrder');
+
+        if (!form || !checkboxes.length || !selectedCountElement || !selectedExercisesContainer || !selectedExercisesOrder) {
+            return;
+        }
+
+        let selectedExerciseIds = checkboxes
+            .filter(c => c.checked)
+            .map(c => c.dataset.exerciseId);
+
+        function updateSelectedCount() {
+            selectedCountElement.textContent = selectedExerciseIds.length.toString();
+        }
+
+        function renderSelectedOrder() {
+            selectedExercisesOrder.innerHTML = '';
+
+            selectedExerciseIds.forEach(id => {
+                const checkbox = checkboxes.find(c => c.dataset.exerciseId === id);
+                if (!checkbox) {
+                    return;
+                }
+
+                const li = document.createElement('li');
+                li.textContent = checkbox.dataset.exerciseName;
+                selectedExercisesOrder.appendChild(li);
+            });
+        }
+
+        function syncHiddenInputs() {
+            selectedExercisesContainer.innerHTML = '';
+
+            selectedExerciseIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'SelectedExerciseIds';
+                input.value = id;
+                selectedExercisesContainer.appendChild(input);
+            });
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function () {
+                const id = this.dataset.exerciseId;
+                const existingIndex = selectedExerciseIds.indexOf(id);
+
+                if (this.checked && existingIndex === -1) {
+                    selectedExerciseIds.push(id);
+                } else if (!this.checked && existingIndex !== -1) {
+                    selectedExerciseIds.splice(existingIndex, 1);
+                }
+
+                updateSelectedCount();
+                renderSelectedOrder();
+                syncHiddenInputs();
+            });
+        });
+
+        form.addEventListener('submit', syncHiddenInputs);
+
+        updateSelectedCount();
+        renderSelectedOrder();
+        syncHiddenInputs();
+    })();
+</script>
