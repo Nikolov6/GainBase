@@ -29,5 +29,16 @@ namespace GainBase.GCommon
         public const int WorkoutNameMaxLength = 60;
         public const int WorkoutDescriptionMinLength = 10;
         public const int WorkoutDescriptionMaxLength = 600;
+
+        // GymSession
+        public const int GymSessionDurationMinMinutes = 1;
+        public const int GymSessionDurationMaxMinutes = 600;
+        public const int GymSessionNoteMaxLength = 1200;
+
+        // GymSessionExerciseLog
+        public const int GymSessionSetsMinValue = 1;
+        public const int GymSessionSetsMaxValue = 30;
+        public const int GymSessionRepsMinValue = 1;
+        public const int GymSessionRepsMaxValue = 200;
     }
 }

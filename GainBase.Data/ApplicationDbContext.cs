@@ -19,6 +19,8 @@ namespace GainBase.Data
         public virtual DbSet<UserExercise> UsersExercises { get; set; } = null!;
         public virtual DbSet<Workout> Workouts { get; set; } = null!;
         public virtual DbSet<WorkoutExercise> WorkoutExercises { get; set; } = null!;
+        public virtual DbSet<GymSession> GymSessions { get; set; } = null!;
+        public virtual DbSet<GymSessionExerciseLog> GymSessionExerciseLogs { get; set; } = null!;
 
         public override int SaveChanges()
         {
@@ -62,6 +64,15 @@ namespace GainBase.Data
             {
                 if (entry.State == EntityState.Added)
                     entry.Entity.SavedAt = DateTime.UtcNow;
+            }
+
+            foreach (EntityEntry<GymSession> entry in ChangeTracker.Entries<GymSession>())
+            {
+                if (entry.State == EntityState.Added)
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+
+                if (entry.State == EntityState.Modified)
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
             }
         }
     }

@@ -46,5 +46,6 @@ namespace GainBase.Data.Models
 
         public virtual ICollection<UserExercise> UserExercises { get; set; } = new HashSet<UserExercise>();
         public virtual ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new HashSet<WorkoutExercise>();
+        public virtual ICollection<GymSessionExerciseLog> GymSessionExerciseLogs { get; set; } = new HashSet<GymSessionExerciseLog>();
     }
 }

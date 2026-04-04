@@ -29,5 +29,6 @@ namespace GainBase.Data.Models
         public virtual IdentityUser Creator { get; set; } = null!;
 
         public virtual ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new HashSet<WorkoutExercise>();
+        public virtual ICollection<GymSession> GymSessions { get; set; } = new HashSet<GymSession>();
     }
 }
