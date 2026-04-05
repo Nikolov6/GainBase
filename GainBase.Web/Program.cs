@@ -1,6 +1,9 @@
 using GainBase.Data;
+using GainBase.Data.Configuration;
+using GainBase.Data.Configuration.Contracts;
 using GainBase.Services.Core;
 using GainBase.Services.Core.Contracts;
+using GainBase.Web.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,11 +21,14 @@ namespace GainBase.Web
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
+
             builder.Services
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
                     ConfigureIdentity(options, builder.Configuration);
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -52,6 +58,9 @@ namespace GainBase.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseRolesSeeder();
+            app.UseAdminUserSeeder();
 
             app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 

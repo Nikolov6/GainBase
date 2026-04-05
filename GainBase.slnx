@@ -7,6 +7,7 @@
     <Project Path="GainBase.Services.Core/GainBase.Services.Core.csproj" Id="f98d8641-97d0-4c2b-a96f-fdcc0fd58583" />
   </Folder>
   <Folder Name="/Web/">
+    <Project Path="GainBase.Web.Infrastructure/GainBase.Web.Infrastructure.csproj" Id="414300a9-ff8d-494e-b8f3-a8fb04800d71" />
     <Project Path="GainBase.Web.ViewModels/GainBase.Web.ViewModels.csproj" />
     <Project Path="GainBase.Web/GainBase.Web.csproj" />
   </Folder>
