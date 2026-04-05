@@ -20,7 +20,7 @@ namespace GainBase.Services.Core
         {
             return await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.CreatorId == userId)
+                .Where(w => w.CreatorId == userId && !w.IsDeleted)
                 .OrderBy(w => w.Name)
                 .Select(w => new WorkoutSelectionViewModel
                 {
@@ -35,7 +35,7 @@ namespace GainBase.Services.Core
         {
             var workout = await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.Id == workoutId && w.CreatorId == userId)
+                .Where(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted)
                 .Select(w => new
                 {
                     w.Id,
@@ -80,7 +80,7 @@ namespace GainBase.Services.Core
         {
             var workoutData = await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.Id == model.WorkoutId && w.CreatorId == userId)
+                .Where(w => w.Id == model.WorkoutId && w.CreatorId == userId && !w.IsDeleted)
                 .Select(w => new
                 {
                     w.Id,

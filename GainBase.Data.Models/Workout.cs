@@ -25,6 +25,9 @@ namespace GainBase.Data.Models
 
         public DateTime? UpdatedAt { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         [ForeignKey(nameof(CreatorId))]
         public virtual IdentityUser Creator { get; set; } = null!;
 

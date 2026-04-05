@@ -74,7 +74,7 @@ namespace GainBase.Services.Core
         {
             return await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.CreatorId == userId)
+                .Where(w => w.CreatorId == userId && !w.IsDeleted)
                 .OrderByDescending(w => w.CreatedAt)
                 .Select(w => new WorkoutMyViewModel
                 {
@@ -91,7 +91,7 @@ namespace GainBase.Services.Core
         {
             return await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.Id == workoutId && w.CreatorId == userId)
+                .Where(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted)
                 .Select(w => new WorkoutDetailsViewModel
                 {
                     Id = w.Id,
@@ -117,7 +117,7 @@ namespace GainBase.Services.Core
         {
             return await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.Id == workoutId && w.CreatorId == userId)
+                .Where(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted)
                 .Select(w => new WorkoutFormModel
                 {
                     Id = w.Id,
@@ -135,7 +135,7 @@ namespace GainBase.Services.Core
         {
             Workout? workout = await dbContext.Workouts
                 .Include(w => w.WorkoutExercises)
-                .FirstOrDefaultAsync(w => w.Id == workoutId && w.CreatorId == userId);
+                .FirstOrDefaultAsync(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted);
 
             if (workout == null)
             {
@@ -184,7 +184,7 @@ namespace GainBase.Services.Core
         {
             WorkoutDeleteViewModel? model = await dbContext.Workouts
                 .AsNoTracking()
-                .Where(w => w.Id == workoutId && w.CreatorId == userId)
+                .Where(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted)
                 .Select(w => new WorkoutDeleteViewModel
                 {
                     Id = w.Id,
@@ -201,18 +201,17 @@ namespace GainBase.Services.Core
         public async Task<bool> DeleteWorkoutAsync(Guid workoutId, string userId)
         {
             Workout? workout = await dbContext.Workouts
-                .Include(w => w.WorkoutExercises)
-                .FirstOrDefaultAsync(w => w.Id == workoutId && w.CreatorId == userId);
+                .FirstOrDefaultAsync(w => w.Id == workoutId && w.CreatorId == userId && !w.IsDeleted);
 
             if (workout == null)
             {
                 return false;
             }
 
-            dbContext.WorkoutExercises.RemoveRange(workout.WorkoutExercises);
-            dbContext.Workouts.Remove(workout);
-            await dbContext.SaveChangesAsync();
+            workout.IsDeleted = true;
+            workout.UpdatedAt = DateTime.UtcNow;
 
+            await dbContext.SaveChangesAsync();
             return true;
         }
 
