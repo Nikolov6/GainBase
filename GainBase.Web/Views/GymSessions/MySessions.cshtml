@@ -1,0 +1,49 @@
+@model IEnumerable<GymSessionListViewModel>
+
+@{
+    ViewData["Title"] = "My Sessions";
+}
+
+<div class="container mt-4">
+    <partial name="_AlertPartial" />
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">My Sessions</h2>
+        <a asp-action="SelectWorkout" class="btn btn-primary rounded-pill px-4">➕ Log Session</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="display-1 text-muted opacity-25 mb-3">🏋️</div>
+            <h3 class="text-muted fw-bold">No sessions logged yet</h3>
+            <p class="text-secondary">Start by logging a session from one of your workouts.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-5">
+            @foreach (GymSessionListViewModel session in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 exercise-card shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h4 class="fw-bold text-dark mb-2">@session.WorkoutName</h4>
+
+                            <div class="small text-secondary mb-3">
+                                Date: <strong>@session.SessionDate</strong><br />
+                                Duration: <strong>@session.DurationMinutes min</strong><br />
+                                Exercises: <strong>@session.ExerciseCount</strong>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-auto">
+                                <a asp-action="Details" asp-route-id="@session.Id" class="btn btn-outline-dark rounded-pill flex-grow-1">Details</a>
+                                <a asp-action="Delete" asp-route-id="@session.Id" class="btn btn-danger rounded-pill">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

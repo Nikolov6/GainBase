@@ -1,0 +1,44 @@
+@model IEnumerable<WorkoutSelectionViewModel>
+
+@{
+    ViewData["Title"] = "Select Workout";
+}
+
+<div class="container mt-4">
+    <partial name="_AlertPartial" />
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Select Workout</h2>
+        <a asp-action="MySessions" class="btn btn-outline-secondary rounded-pill px-4">&larr; My Sessions</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="display-1 text-muted opacity-25 mb-3">💪</div>
+            <h3 class="text-muted fw-bold">No workouts available</h3>
+            <p class="text-secondary mb-3">Create a workout first, then log a gym session from it.</p>
+            <a asp-controller="Workouts" asp-action="Create" class="btn btn-primary rounded-pill px-4">Create Workout</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-5">
+            @foreach (WorkoutSelectionViewModel workout in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 exercise-card shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h4 class="fw-bold text-dark mb-2">@workout.Name</h4>
+                            <p class="text-muted mb-4">Exercises: <strong>@workout.ExercisesCount</strong></p>
+
+                            <a asp-action="Create" asp-route-workoutId="@workout.Id" class="btn btn-primary rounded-pill mt-auto">
+                                Log Session
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

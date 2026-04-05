@@ -30,6 +30,7 @@ namespace GainBase.Web
             builder.Services.AddScoped<IEquipmentService, EquipmentService>();
             builder.Services.AddScoped<IMuscleGroupService, MuscleGroupService>();
             builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+            builder.Services.AddScoped<IGymSessionService, GymSessionService>();
 
             WebApplication app = builder.Build();
 

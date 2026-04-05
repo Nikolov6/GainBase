@@ -1,0 +1,70 @@
+@model GymSessionDetailsViewModel
+
+@{
+    ViewData["Title"] = "Session Details";
+}
+
+<div class="container mt-4">
+    <partial name="_AlertPartial" />
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-dark text-white py-3 rounded-top-4">
+            <h2 class="mb-0 fw-bold fs-4">@Model.WorkoutName</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Session Date</div>
+                        <div class="fw-semibold">@Model.SessionDate</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Duration</div>
+                        <div class="fw-semibold">@Model.DurationMinutes min</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Created</div>
+                        <div class="fw-semibold">@Model.CreatedAt</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold mb-2">Note</h5>
+                <p class="text-muted mb-0">@(string.IsNullOrWhiteSpace(Model.Note) ? "No note added." : Model.Note)</p>
+            </div>
+
+            <h5 class="fw-bold mb-3">Exercise Logs</h5>
+            <div class="table-responsive mb-4">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Exercise</th>
+                            <th>Sets</th>
+                            <th>Reps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (GymSessionExerciseLogViewModel log in Model.ExerciseLogs)
+                        {
+                            <tr>
+                                <td>@log.ExerciseOrder</td>
+                                <td>@log.ExerciseName</td>
+                                <td>@log.Sets</td>
+                                <td>@log.Reps</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <a asp-action="MySessions" class="btn btn-outline-secondary rounded-pill px-4">&larr; Back to My Sessions</a>
+        </div>
+    </div>
+</div>
