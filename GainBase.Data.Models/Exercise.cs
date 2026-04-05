@@ -35,6 +35,9 @@ namespace GainBase.Data.Models
 
         public DateTime? UpdatedAt { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         [ForeignKey(nameof(MuscleGroupId))]
         public virtual MuscleGroup MuscleGroup { get; set; } = null!;
 

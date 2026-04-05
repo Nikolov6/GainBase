@@ -22,6 +22,7 @@ namespace GainBase.Services.Core
                 .Include(e => e.MuscleGroup)
                 .Include(e => e.Equipment)
                 .Include(e => e.UserExercises)
+                .Where(e => !e.IsDeleted)
                 .AsNoTracking();
 
             if (queryModel.MuscleGroupId.HasValue)
@@ -59,7 +60,7 @@ namespace GainBase.Services.Core
         {
             ExerciseDetailsViewModel? details = await dbContext.Exercises
                 .AsNoTracking()
-                .Where(e => e.Id == exerciseId)
+                .Where(e => e.Id == exerciseId && !e.IsDeleted)
                 .Select(e => new ExerciseDetailsViewModel
                 {
                     Id = e.Id,
@@ -103,7 +104,7 @@ namespace GainBase.Services.Core
         {
             IEnumerable<ExerciseFavoriteViewModel> userFavorites = await dbContext.UsersExercises
                 .AsNoTracking()
-                .Where(ue => ue.UserId == userId)
+                .Where(ue => ue.UserId == userId && !ue.Exercise.IsDeleted)
                 .OrderByDescending(ue => ue.SavedAt)
                 .Select(ue => new ExerciseFavoriteViewModel
                 {
@@ -122,7 +123,7 @@ namespace GainBase.Services.Core
         {
             IEnumerable<ExerciseMyViewModel> myExercises = await dbContext.Exercises
                 .AsNoTracking()
-                .Where(e => e.CreatorId == userId)
+                .Where(e => e.CreatorId == userId && !e.IsDeleted)
                 .OrderByDescending(e => e.CreatedAt)
                 .Select(e => new ExerciseMyViewModel
                 {
@@ -140,7 +141,7 @@ namespace GainBase.Services.Core
         public async Task AddToUserFavoritesAsync(Guid exerciseId, string userId)
         {
             Exercise? exercise = await dbContext.Exercises
-                .FindAsync(exerciseId);
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && !e.IsDeleted);
 
             if (exercise != null)
             {
@@ -166,7 +167,7 @@ namespace GainBase.Services.Core
         public async Task<bool> IsExerciseCreatorAsync(Guid exerciseId, string userId)
         {
             bool isCreator = await dbContext.Exercises
-                .AnyAsync(e => e.Id == exerciseId && e.CreatorId == userId);
+                .AnyAsync(e => e.Id == exerciseId && e.CreatorId == userId && !e.IsDeleted);
 
             return isCreator;
         }
@@ -188,7 +189,7 @@ namespace GainBase.Services.Core
         {
             ExerciseFormModel? model = await dbContext.Exercises
                 .AsNoTracking()
-                .Where(e => e.Id == exerciseId && e.CreatorId == userId)
+                .Where(e => e.Id == exerciseId && e.CreatorId == userId && !e.IsDeleted)
                 .Select(e => new ExerciseFormModel
                 {
                     Id = e.Id,
@@ -206,7 +207,7 @@ namespace GainBase.Services.Core
         public async Task<bool> EditExerciseAsync(Guid exerciseId, ExerciseFormModel model, string userId)
         {
             Exercise? exerciseToEdit = await dbContext.Exercises
-                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId);
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId && !e.IsDeleted);
 
             if (exerciseToEdit == null)
             {
@@ -227,7 +228,7 @@ namespace GainBase.Services.Core
         {
             ExerciseDeleteViewModel? model = await dbContext.Exercises
                 .AsNoTracking()
-                .Where(e => e.Id == exerciseId && e.CreatorId == userId)
+                .Where(e => e.Id == exerciseId && e.CreatorId == userId && !e.IsDeleted)
                 .Select(e => new ExerciseDeleteViewModel
                 {
                     Id = e.Id,
@@ -246,16 +247,16 @@ namespace GainBase.Services.Core
         public async Task<bool> DeleteExerciseAsync(Guid exerciseId, string userId)
         {
             Exercise? exerciseToDelete = await dbContext.Exercises
-                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId);
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && e.CreatorId == userId && !e.IsDeleted);
 
             if (exerciseToDelete == null)
             {
                 return false;
             }
 
-            dbContext.Exercises.Remove(exerciseToDelete);
-            await dbContext.SaveChangesAsync();
+            exerciseToDelete.IsDeleted = true;
 
+            await dbContext.SaveChangesAsync();
             return true;
         }
     }

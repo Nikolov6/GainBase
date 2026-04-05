@@ -20,6 +20,7 @@ namespace GainBase.Services.Core
         {
             return await dbContext.Exercises
                 .AsNoTracking()
+                .Where(e => !e.IsDeleted)
                 .OrderBy(e => e.Name)
                 .Select(e => new WorkoutExerciseOptionViewModel
                 {
@@ -41,7 +42,7 @@ namespace GainBase.Services.Core
             }
 
             int existingExercisesCount = await dbContext.Exercises
-                .CountAsync(e => selectedExerciseIds.Contains(e.Id));
+                .CountAsync(e => selectedExerciseIds.Contains(e.Id) && !e.IsDeleted);
 
             if (existingExercisesCount != selectedExerciseIds.Count)
             {
