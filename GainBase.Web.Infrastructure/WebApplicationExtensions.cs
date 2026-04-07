@@ -23,5 +23,13 @@ namespace GainBase.Web.Infrastructure
             identitySeeder.SeedAdminUserAsync().GetAwaiter().GetResult();
             return applicationBuilder;
         }
+
+        public static IApplicationBuilder UseDefaultUserSeeder(this IApplicationBuilder applicationBuilder)
+        {
+            using IServiceScope scope = applicationBuilder.ApplicationServices.CreateScope();
+            IIdentitySeeder identitySeeder = scope.ServiceProvider.GetRequiredService<IIdentitySeeder>();
+            identitySeeder.SeedDefaultUserAsync().GetAwaiter().GetResult();
+            return applicationBuilder;
+        }
     }
 }

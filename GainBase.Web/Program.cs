@@ -61,9 +61,10 @@ namespace GainBase.Web
 
             app.UseRolesSeeder();
             app.UseAdminUserSeeder();
+            app.UseDefaultUserSeeder();
 
-            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
-
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");      
+            
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

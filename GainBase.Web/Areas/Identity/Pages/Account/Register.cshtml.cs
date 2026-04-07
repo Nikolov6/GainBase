@@ -80,6 +80,17 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    IdentityResult addToRoleResult = await userManager.AddToRoleAsync(user, "User");
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        foreach (IdentityError error in addToRoleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+
+                        return Page();
+                    }
+
                     if (userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -90,6 +101,7 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

@@ -1,13 +1,15 @@
 ﻿using GainBase.Data.Configuration.Contracts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace GainBase.Data.Configuration
 {
     public class IdentitySeeder : IIdentitySeeder
     {
-        private readonly string[] applicationRoles = new[] { "Admin", "User" };
-        
+        private const string AdminRole = "Admin";
+        private const string UserRole = "User";
+
+        private readonly string[] applicationRoles = new[] { AdminRole, UserRole };
+
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<IdentityUser> userManager;
 
@@ -15,7 +17,7 @@ namespace GainBase.Data.Configuration
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
-        } 
+        }
 
         public async Task SeedRolesAsync()
         {
@@ -24,58 +26,65 @@ namespace GainBase.Data.Configuration
                 bool roleExists = await roleManager.RoleExistsAsync(role);
                 if (!roleExists)
                 {
-                    IdentityRole newRole = new IdentityRole(role);
-
-                    IdentityResult identityRoleResult = await roleManager.CreateAsync(newRole);
+                    IdentityResult identityRoleResult = await roleManager.CreateAsync(new IdentityRole(role));
                     if (!identityRoleResult.Succeeded)
                     {
                         throw new InvalidOperationException($"Failed to create role '{role}'.");
                     }
-
                 }
             }
         }
 
         public async Task SeedAdminUserAsync()
         {
-            string adminId = "e59fe6bf-c819-4cd3-b737-d2a2469f3d79";
-            string adminUsername = "admin";
-            string adminNormalizedUsername = adminUsername.ToUpperInvariant();
-            string adminEmail = "admin@gainbase.com";
-            string adminPassword = "Admin123!";
+            await SeedUserWithRoleAsync(
+                id: "e59fe6bf-c819-4cd3-b737-d2a2469f3d79",
+                username: "admin",
+                email: "admin@gainbase.com",
+                password: "Admin123!",
+                role: AdminRole);
+        }
 
-            IdentityUser? adminUser = await userManager.FindByEmailAsync(adminEmail);
-            if (adminUser == null)
+        public async Task SeedDefaultUserAsync()
+        {
+            await SeedUserWithRoleAsync(
+                id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                username: "SeedUser",
+                email: "seeduser@gainbase.com",
+                password: "SeedUser123!",
+                role: UserRole);
+        }
+
+        private async Task SeedUserWithRoleAsync(string id, string username, string email, string password, string role)
+        {
+            IdentityUser? user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
             {
-                IdentityUser user = new IdentityUser
+                user = new IdentityUser
                 {
-                    Id = adminId,
-                    UserName = adminUsername,
-                    NormalizedUserName = adminNormalizedUsername,
-                    Email = adminEmail,
-                    NormalizedEmail = adminEmail.ToUpperInvariant(),
+                    Id = id,
+                    UserName = username,
+                    NormalizedUserName = username.ToUpperInvariant(),
+                    Email = email,
+                    NormalizedEmail = email.ToUpperInvariant(),
                     EmailConfirmed = true,
                 };
 
-                PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
-                user.PasswordHash = hasher.HashPassword(user, adminPassword);
-
-                IdentityResult result = await userManager.CreateAsync(user);
-                if (!result.Succeeded)
+                IdentityResult createResult = await userManager.CreateAsync(user, password);
+                if (!createResult.Succeeded)
                 {
-                    throw new InvalidOperationException($"Failed to create admin user.");
+                    throw new InvalidOperationException($"Failed to create user '{email}'.");
                 }
-
-                adminUser = user;
             }
 
-            bool isInRole = await userManager.IsInRoleAsync(adminUser, applicationRoles[0]);
+            bool isInRole = await userManager.IsInRoleAsync(user, role);
             if (!isInRole)
             {
-                IdentityResult result = await userManager.AddToRoleAsync(adminUser, applicationRoles[0]);
-                if (!result.Succeeded)
+                IdentityResult addToRoleResult = await userManager.AddToRoleAsync(user, role);
+                if (!addToRoleResult.Succeeded)
                 {
-                    throw new InvalidOperationException($"Failed to add admin user to role.");
+                    throw new InvalidOperationException($"Failed to add user '{email}' to role '{role}'.");
                 }
             }
         }
