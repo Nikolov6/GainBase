@@ -1,0 +1,69 @@
+@model ExerciseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Admin - Exercise Details";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-dark text-white py-3 rounded-top-4 d-flex justify-content-between align-items-center">
+            <h2 class="mb-0 fw-bold fs-4">@Model.Name</h2>
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">⭐ @Model.FavoritesCount</span>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Muscle Group</div>
+                        <div class="fw-semibold">@Model.MuscleGroupName</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Equipment</div>
+                        <div class="fw-semibold">@Model.EquipmentName</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Created By</div>
+                        <div class="fw-semibold">@Model.CreatorUserName</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Created On</div>
+                        <div class="fw-semibold">@Model.CreatedAt</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <div class="text-muted small">Last Updated</div>
+                        <div class="fw-semibold">@(Model.UpdatedAt ?? "Not updated")</div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-2">Description</h5>
+            <p class="text-muted mb-4">
+                @(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)
+            </p>
+
+            <h5 class="fw-bold mb-2">Instructions</h5>
+            <div class="p-3 border rounded-3 bg-light mb-4" style="white-space: pre-wrap;">@Model.Instructions</div>
+
+            <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                <a asp-area="Admin" asp-controller="ExercisesManagement" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                    &larr; Back
+                </a>
+                <a asp-area="Admin" asp-controller="ExercisesManagement" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning rounded-pill px-4 text-dark">
+                    Edit
+                </a>
+                <a asp-area="Admin" asp-controller="ExercisesManagement" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger rounded-pill px-4">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

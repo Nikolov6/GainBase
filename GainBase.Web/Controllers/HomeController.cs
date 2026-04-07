@@ -9,6 +9,11 @@ namespace GainBase.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "ExercisesManagement", new { area = "Admin" });
+            }
+
             return View();
         }
 

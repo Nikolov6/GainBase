@@ -259,5 +259,99 @@ namespace GainBase.Services.Core
             await dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<ExerciseMyViewModel>> GetAllExercisesForAdminAsync()
+        {
+            IEnumerable<ExerciseMyViewModel> exercises = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => !e.IsDeleted)
+                .OrderByDescending(e => e.CreatedAt)
+                .Select(e => new ExerciseMyViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name,
+                    CreatedAt = e.CreatedAt.ToString(DateTimeFormat)
+                })
+                .ToArrayAsync();
+
+            return exercises;
+        }
+
+        public async Task<ExerciseFormModel?> GetExerciseForEditByAdminAsync(Guid exerciseId)
+        {
+            ExerciseFormModel? model = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.Id == exerciseId && !e.IsDeleted)
+                .Select(e => new ExerciseFormModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Description = e.Description,
+                    MuscleGroupId = e.MuscleGroupId,
+                    EquipmentId = e.EquipmentId,
+                    Instructions = e.Instructions
+                })
+                .FirstOrDefaultAsync();
+
+            return model;
+        }
+
+        public async Task<bool> EditExerciseByAdminAsync(Guid exerciseId, ExerciseFormModel model)
+        {
+            Exercise? exerciseToEdit = await dbContext.Exercises
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && !e.IsDeleted);
+
+            if (exerciseToEdit == null)
+            {
+                return false;
+            }
+
+            exerciseToEdit.Name = model.Name;
+            exerciseToEdit.Description = model.Description;
+            exerciseToEdit.MuscleGroupId = model.MuscleGroupId;
+            exerciseToEdit.EquipmentId = model.EquipmentId;
+            exerciseToEdit.Instructions = model.Instructions;
+
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<ExerciseDeleteViewModel?> GetExerciseForDeleteByAdminAsync(Guid exerciseId)
+        {
+            ExerciseDeleteViewModel? model = await dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.Id == exerciseId && !e.IsDeleted)
+                .Select(e => new ExerciseDeleteViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Description = e.Description,
+                    MuscleGroupName = e.MuscleGroup.Name,
+                    EquipmentName = e.Equipment.Name,
+                    CreatedAt = e.CreatedAt.ToString(DateTimeFormat),
+                    FavoritesCount = e.UserExercises.Count
+                })
+                .FirstOrDefaultAsync();
+
+            return model;
+        }
+
+        public async Task<bool> DeleteExerciseByAdminAsync(Guid exerciseId)
+        {
+            Exercise? exerciseToDelete = await dbContext.Exercises
+                .FirstOrDefaultAsync(e => e.Id == exerciseId && !e.IsDeleted);
+
+            if (exerciseToDelete == null)
+            {
+                return false;
+            }
+
+            exerciseToDelete.IsDeleted = true;
+
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

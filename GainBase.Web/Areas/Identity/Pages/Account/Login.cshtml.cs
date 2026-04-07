@@ -98,16 +98,22 @@ namespace GainBase.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 // Resolve user by email, then attempt sign-in.
-                var user = await userManager.FindByEmailAsync(Input.Email);
+                IdentityUser user = await userManager.FindByEmailAsync(Input.Email);
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
-             
+
                 SignInResult result = await signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    bool isAdmin = await userManager.IsInRoleAsync(user, "Admin");
+                    if (isAdmin)
+                    {
+                        return LocalRedirect(Url.Content("~/Admin/ExercisesManagement"));
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

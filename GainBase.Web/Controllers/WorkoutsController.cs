@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GainBase.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class WorkoutsController : BaseController
     {
         private readonly IWorkoutService workoutService;

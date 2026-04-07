@@ -15,8 +15,13 @@ namespace GainBase.Services.Core.Contracts
         Task<bool> IsExerciseCreatorAsync(Guid exerciseId, string userId);
         Task<ExerciseFormModel?> GetExerciseForEditAsync(Guid exerciseId, string userId);
         Task<bool> EditExerciseAsync(Guid exerciseId, ExerciseFormModel model, string userId);
-
         Task<ExerciseDeleteViewModel?> GetExerciseForDeleteAsync(Guid exerciseId, string userId);
         Task<bool> DeleteExerciseAsync(Guid exerciseId, string userId);
+
+        Task<IEnumerable<ExerciseMyViewModel>> GetAllExercisesForAdminAsync();
+        Task<ExerciseFormModel?> GetExerciseForEditByAdminAsync(Guid exerciseId);
+        Task<bool> EditExerciseByAdminAsync(Guid exerciseId, ExerciseFormModel model);
+        Task<ExerciseDeleteViewModel?> GetExerciseForDeleteByAdminAsync(Guid exerciseId);
+        Task<bool> DeleteExerciseByAdminAsync(Guid exerciseId);
     }
 }

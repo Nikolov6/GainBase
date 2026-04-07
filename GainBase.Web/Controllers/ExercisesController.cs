@@ -28,6 +28,11 @@ namespace GainBase.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] AllExercisesQueryModel queryModel)
         {
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "ExercisesManagement", new { area = "Admin" });
+            }
+
             string? currentUserId = GetCurrentUserId();
 
             await PopulateExerciseQueryCollectionsAsync(queryModel);
@@ -39,6 +44,11 @@ namespace GainBase.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "ExercisesManagement", new { area = "Admin" });
+            }
+
             string? currentUserId = GetCurrentUserId();
             ExerciseDetailsViewModel? model = await exerciseService.GetExerciseDetailsAsync(id, currentUserId);
 
@@ -52,7 +62,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Create()
         {
             ExerciseFormModel model = new ExerciseFormModel();
@@ -62,7 +72,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Create(ExerciseFormModel model)
         {
             if (!ModelState.IsValid)
@@ -106,7 +116,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(Guid id)
         {
             string userId = GetCurrentUserId()!;
@@ -123,7 +133,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(Guid id, ExerciseFormModel model)
         {
             if (id != model.Id)
@@ -179,7 +189,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Delete(Guid id)
         {
             string userId = GetCurrentUserId()!;
@@ -195,7 +205,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
@@ -222,7 +232,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> MyFavorites()
         {
             string userId = GetCurrentUserId()!;
@@ -231,7 +241,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> MyExercises()
         {
             string userId = GetCurrentUserId()!;
@@ -240,7 +250,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddToFavorites(Guid exerciseId, string? returnUrl = null)
         {
             string userId = GetCurrentUserId()!;
@@ -270,7 +280,7 @@ namespace GainBase.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> RemoveFromFavorites(Guid exerciseId, string? returnUrl = null)
         {
             string userId = GetCurrentUserId()!;
