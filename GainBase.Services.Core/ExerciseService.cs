@@ -16,12 +16,9 @@ namespace GainBase.Services.Core
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ExerciseIndexViewModel>> GetAllExercisesAsync(AllExercisesQueryModel queryModel, string? currentUserId)
+        public async Task<(IEnumerable<ExerciseIndexViewModel> Exercises, int TotalExercises)> GetAllExercisesAsync(AllExercisesQueryModel queryModel, string? currentUserId)
         {
             IQueryable<Exercise> exercisesQuery = dbContext.Exercises
-                .Include(e => e.MuscleGroup)
-                .Include(e => e.Equipment)
-                .Include(e => e.UserExercises)
                 .Where(e => !e.IsDeleted)
                 .AsNoTracking();
 
@@ -37,7 +34,18 @@ namespace GainBase.Services.Core
                     .Where(e => e.EquipmentId == queryModel.EquipmentId.Value);
             }
 
-            IEnumerable<ExerciseIndexViewModel> allExercises = await exercisesQuery
+            int totalExercises = await exercisesQuery.CountAsync();
+
+            int currentPage = queryModel.CurrentPage < 1
+                ? 1
+                : queryModel.CurrentPage;
+
+            IEnumerable<ExerciseIndexViewModel> exercises = await exercisesQuery
+                .OrderByDescending(e => e.UserExercises.Count)
+                .ThenBy(e => e.Name)
+                .ThenBy(e => e.MuscleGroup.Name)
+                .Skip((currentPage - 1) * queryModel.ExercisesPerPage)
+                .Take(queryModel.ExercisesPerPage)
                 .Select(e => new ExerciseIndexViewModel
                 {
                     Id = e.Id,
@@ -48,12 +56,9 @@ namespace GainBase.Services.Core
                     IsCreatedByCurrentUser = e.CreatorId == currentUserId,
                     IsInUserFavorites = e.UserExercises.Any(ue => ue.UserId == currentUserId)
                 })
-                .OrderByDescending(e => e.FavoritesCount)
-                .ThenBy(e => e.Name)
-                .ThenBy(e => e.MuscleGroupName)
                 .ToArrayAsync();
 
-            return allExercises;
+            return (exercises, totalExercises);
         }
 
         public async Task<ExerciseDetailsViewModel?> GetExerciseDetailsAsync(Guid exerciseId, string? currentUserId)

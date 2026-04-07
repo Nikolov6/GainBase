@@ -18,6 +18,8 @@
     </div>
 
     <form method="get" asp-area="Admin" asp-controller="ExercisesManagement" asp-action="Index" class="row g-3 mb-4">
+        <input type="hidden" asp-for="CurrentPage" value="1" />
+
         <div class="col-12 col-md-5">
             <label asp-for="MuscleGroupId" class="form-label fw-semibold">Muscle Group</label>
             <select asp-for="MuscleGroupId" asp-items="@(new SelectList(Model.MuscleGroups, "Id", "Name"))" class="form-select">
@@ -72,5 +74,45 @@
                 </tbody>
             </table>
         </div>
+    }
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Exercises pages">
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : string.Empty)">
+                    <a class="page-link"
+                       asp-area="Admin"
+                       asp-controller="ExercisesManagement"
+                       asp-action="Index"
+                       asp-route-currentPage="@(Model.CurrentPage - 1)"
+                       asp-route-muscleGroupId="@Model.MuscleGroupId"
+                       asp-route-equipmentId="@Model.EquipmentId">Previous</a>
+                </li>
+
+                @for (int pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+                {
+                    <li class="page-item @(pageNumber == Model.CurrentPage ? "active" : string.Empty)">
+                        <a class="page-link"
+                           asp-area="Admin"
+                           asp-controller="ExercisesManagement"
+                           asp-action="Index"
+                           asp-route-currentPage="@pageNumber"
+                           asp-route-muscleGroupId="@Model.MuscleGroupId"
+                           asp-route-equipmentId="@Model.EquipmentId">@pageNumber</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty)">
+                    <a class="page-link"
+                       asp-area="Admin"
+                       asp-controller="ExercisesManagement"
+                       asp-action="Index"
+                       asp-route-currentPage="@(Model.CurrentPage + 1)"
+                       asp-route-muscleGroupId="@Model.MuscleGroupId"
+                       asp-route-equipmentId="@Model.EquipmentId">Next</a>
+                </li>
+            </ul>
+        </nav>
     }
 </div>

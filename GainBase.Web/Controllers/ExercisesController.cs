@@ -36,7 +36,10 @@ namespace GainBase.Web.Controllers
             string? currentUserId = GetCurrentUserId();
 
             await PopulateExerciseQueryCollectionsAsync(queryModel);
-            queryModel.Exercises = await exerciseService.GetAllExercisesAsync(queryModel, currentUserId);
+
+            var result = await exerciseService.GetAllExercisesAsync(queryModel, currentUserId);
+            queryModel.Exercises = result.Exercises;
+            queryModel.TotalExercises = result.TotalExercises;
 
             return View(queryModel);
         }

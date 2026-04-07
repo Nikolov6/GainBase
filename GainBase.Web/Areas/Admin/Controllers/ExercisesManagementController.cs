@@ -32,7 +32,10 @@ namespace GainBase.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Index([FromQuery] AllExercisesQueryModel queryModel)
         {
             await PopulateExerciseQueryCollectionsAsync(queryModel);
-            queryModel.Exercises = await exerciseService.GetAllExercisesAsync(queryModel, null);
+
+            var result = await exerciseService.GetAllExercisesAsync(queryModel, null);
+            queryModel.Exercises = result.Exercises;
+            queryModel.TotalExercises = result.TotalExercises;
 
             return View(queryModel);
         }

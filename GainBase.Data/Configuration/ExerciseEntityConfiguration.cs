@@ -74,6 +74,61 @@ namespace GainBase.Data.Configuration
                 CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             },
+            new Exercise
+            {
+                Id = Guid.Parse("7e8d2d4a-1d0d-4b17-9f5d-0e7c9d7b1001"),
+                Name = "Incline Dumbbell Press",
+                Description = "A compound upper-body movement emphasizing the upper chest while also training the front deltoids and triceps.",
+                MuscleGroupId = 1,
+                EquipmentId = 4,
+                Instructions = "Set an adjustable bench to a moderate incline and sit with a dumbbell in each hand resting on your thighs. Lie back while guiding the dumbbells to chest level, keep your feet planted, and retract your shoulder blades to create a stable pressing position. Press the dumbbells upward in a controlled arc until your elbows are nearly extended, then lower them slowly to the starting position while maintaining tension through the chest and shoulders. Keep your wrists neutral, avoid bouncing at the bottom, and repeat each repetition with the same range of motion and steady tempo.",
+                CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Exercise
+            {
+                Id = Guid.Parse("7e8d2d4a-1d0d-4b17-9f5d-0e7c9d7b1002"),
+                Name = "Lat Pulldown",
+                Description = "A machine-based vertical pulling exercise that develops the lats, upper back, and biceps.",
+                MuscleGroupId = 2,
+                EquipmentId = 15,
+                Instructions = "Sit at the lat pulldown station and secure your thighs under the pad so your lower body remains stable. Grip the bar slightly wider than shoulder width, brace your core, and pull the bar toward your upper chest by driving your elbows down and back while keeping your torso mostly upright. Pause briefly at the bottom to contract your back muscles, then return the bar upward with control until your arms are extended without letting the weight stack slam. Maintain consistent posture, avoid excessive body swing, and perform each repetition with smooth, deliberate movement.",
+                CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Exercise
+            {
+                Id = Guid.Parse("7e8d2d4a-1d0d-4b17-9f5d-0e7c9d7b1003"),
+                Name = "Romanian Deadlift",
+                Description = "A hip-hinge compound exercise targeting hamstrings, glutes, and lower-back stabilizers.",
+                MuscleGroupId = 3,
+                EquipmentId = 20,
+                Instructions = "Stand tall with the barbell in front of your thighs, hands at about shoulder width, and knees slightly bent. Initiate the movement by pushing your hips backward while keeping your chest lifted and spine neutral, allowing the bar to travel down close to your legs until you feel a deep stretch in your hamstrings. Reverse the motion by driving your hips forward and squeezing your glutes to return to standing without leaning back excessively at the top. Keep the bar path close, move in a controlled manner, and avoid rounding your lower back throughout the set.",
+                CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Exercise
+            {
+                Id = Guid.Parse("7e8d2d4a-1d0d-4b17-9f5d-0e7c9d7b1004"),
+                Name = "Seated Cable Row",
+                Description = "A horizontal pulling exercise that strengthens the mid-back, rear delts, and biceps.",
+                MuscleGroupId = 2,
+                EquipmentId = 21,
+                Instructions = "Sit at the cable row station with knees slightly bent and your torso upright, then grasp the handle with a neutral grip. Start with arms extended and shoulders stable, pull the handle toward your lower ribcage by driving elbows back and squeezing your shoulder blades together at peak contraction. Hold briefly, then extend your arms forward slowly to return to the start position while keeping tension on the back muscles. Avoid jerking your torso, keep your core braced, and repeat each rep with controlled form and full range.",
+                CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            },
+            new Exercise
+            {
+                Id = Guid.Parse("7e8d2d4a-1d0d-4b17-9f5d-0e7c9d7b1005"),
+                Name = "Cable Triceps Pushdown",
+                Description = "An isolation movement for building triceps strength and elbow extension control.",
+                MuscleGroupId = 5,
+                EquipmentId = 21,
+                Instructions = "Attach a straight or rope handle to a high cable pulley and stand facing the machine with a stable stance. Keep your elbows tucked close to your torso and begin with forearms bent, then press the handle downward by extending your elbows until your arms are straight without locking aggressively. Pause briefly to contract the triceps, then allow the handle to rise back up under control while keeping your upper arms fixed in place. Maintain a neutral wrist position, avoid using body momentum, and repeat with smooth and consistent execution.",
+                CreatorId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            },
         };
     }
 }
